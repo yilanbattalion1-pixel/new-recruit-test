@@ -126,6 +126,9 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  margin-bottom:9px;
  line-height:1.6;
 }
+.required-mark{color:#ff8796;font-size:11px;font-weight:900;margin-left:7px}
+.form-group.invalid .form-title{color:#ffb0bb}
+.form-group.invalid .text-input,.form-group.invalid .choice-list{outline:2px solid #ff8796;outline-offset:3px;border-radius:6px}
 .form-hint{
  font-size:10px;
  color:#b8bfd3;
@@ -348,10 +351,10 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     也不會包含在公開分享的測驗結果中。
    </p>
 
-   <form id="profileForm">
+   <form id="profileForm" novalidate>
 
     <div class="form-group">
-     <div class="form-title">01 / 姓名</div>
+     <div class="form-title">01 / 姓名<span class="required-mark" aria-label="必填">＊必填</span></div>
      <input
       id="personName"
       name="personName"
@@ -365,7 +368,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     </div>
 
     <div class="form-group">
-     <div class="form-title">02 / 家庭結構</div>
+     <div class="form-title">02 / 家庭結構<span class="required-mark" aria-label="必填">＊必填</span></div>
      <div class="choice-list">
       <label class="choice"><input type="radio" name="family" value="雙親家庭" required>雙親家庭</label>
       <label class="choice"><input type="radio" name="family" value="單親家庭">單親家庭</label>
@@ -374,7 +377,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     </div>
 
     <div class="form-group">
-     <div class="form-title">03 / 家庭每月總收入</div>
+     <div class="form-title">03 / 家庭每月總收入<span class="required-mark" aria-label="必填">＊必填</span></div>
      <p class="form-hint">
       請依家庭每月總收入選擇最符合的區間，單位為新臺幣。
      </p>
@@ -388,7 +391,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     </div>
 
     <div class="form-group">
-     <div class="form-title">04 / 個人債務狀況</div>
+     <div class="form-title">04 / 個人債務狀況<span class="required-mark" aria-label="必填">＊必填</span></div>
      <p class="form-hint">
       請依目前個人尚未清償的債務總額填寫。
      </p>
@@ -403,7 +406,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     </div>
 
     <div class="form-group">
-     <div class="form-title">05 / 最高學歷</div>
+     <div class="form-title">05 / 最高學歷<span class="required-mark" aria-label="必填">＊必填</span></div>
      <p class="form-hint">
       以已畢業或取得學位的最高學歷為準。
      </p>
@@ -418,7 +421,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
     </div>
 
     <div class="form-group">
-     <div class="form-title">06 / 正式工作經驗</div>
+     <div class="form-title">06 / 正式工作經驗<span class="required-mark" aria-label="必填">＊必填</span></div>
      <p class="form-hint">
       不包含實習、工讀或兼職打工。若曾有多份正式工作，請合計工作年資。
      </p>
@@ -945,10 +948,59 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   if(!submitting)show('result');
  });
 
+ const requiredFields=[
+  {name:'personName',label:'姓名',kind:'text'},
+  {name:'family',label:'家庭結構',kind:'radio'},
+  {name:'income',label:'家庭每月總收入',kind:'radio'},
+  {name:'debt',label:'個人債務狀況',kind:'radio'},
+  {name:'education',label:'最高學歷',kind:'radio'},
+  {name:'work',label:'正式工作經驗',kind:'radio'}
+ ];
+
+ function validateProfile(){
+  const form=$('profileForm');
+  form.querySelectorAll('.form-group.invalid').forEach(group=>group.classList.remove('invalid'));
+  let firstInvalid=null;
+  let firstLabel='';
+  for(const field of requiredFields){
+   const input=form.elements.namedItem(field.name);
+   const valid=field.kind==='text'
+    ?Boolean(input.value.trim())
+    :Boolean(getSelected(field.name));
+   if(!valid){
+    const element=field.kind==='radio'?input[0]:input;
+    const group=element.closest('.form-group');
+    group.classList.add('invalid');
+    if(!firstInvalid){firstInvalid=element;firstLabel=field.label;}
+   }
+  }
+  if(!firstInvalid&&!$('consentCheck').checked){
+   firstInvalid=$('consentCheck');
+   firstLabel='個人資料蒐集同意';
+  }
+  if(firstInvalid){
+   $('submitStatus').textContent='請先完成必填項目：'+firstLabel;
+   firstInvalid.closest('.form-group, .consent').scrollIntoView({behavior:'smooth',block:'center'});
+   firstInvalid.focus({preventScroll:true});
+   return false;
+  }
+  $('submitStatus').textContent='';
+  return true;
+ }
+
+ $('profileForm').addEventListener('input',e=>{
+  const group=e.target.closest('.form-group');
+  if(group)group.classList.remove('invalid');
+ });
+ $('profileForm').addEventListener('change',e=>{
+  const group=e.target.closest('.form-group');
+  if(group)group.classList.remove('invalid');
+ });
+
  $('profileForm').addEventListener('submit',async(e)=>{
   e.preventDefault();
   if(submitting||submissionAttempted)return;
-  if(!$('profileForm').reportValidity())return;
+  if(!validateProfile())return;
 
   const data=collectData();
 
