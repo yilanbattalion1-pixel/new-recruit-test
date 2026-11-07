@@ -473,16 +473,17 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
    <div style="font-size:42px;margin:12px 0">✅</div>
    <div class="eyebrow">MISSION COMPLETED</div>
    <h2 style="font-size:21px;color:#e0d5ff">
-    基本資料已提交
+    問卷已送出！
    </h2>
    <p class="muted" style="font-size:12px;line-height:1.9">
     感謝你完成義務役新兵生存適應力測驗與基本資料調查！
    </p>
    <div class="rules">
-    你的測驗結果已完成，基本資料已送交資料接收服務。
+    <strong>傳送狀態：已送出（待確認）</strong><br>
+    資料已送往 Google Apps Script，但此頁無法直接驗證 Google 試算表是否寫入成功。若需確認，請聯絡問卷管理者。
    </div>
    <button id="completeRestart" class="main-btn" style="margin-top:16px">
-    ↻ 重新開始測驗
+    ↻ 重新測驗一次
    </button>
   </div>
  </section>
@@ -671,6 +672,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   index=0;
   answers=Array(questions.length).fill(-1);
   $('profileForm').reset();
+  $('profileForm').querySelectorAll('.form-group.invalid').forEach(group=>group.classList.remove('invalid'));
   $('status').textContent='';
   $('submitStatus').textContent='';
   submitting=false;
@@ -1016,12 +1018,12 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   $('submitStatus').textContent='正在送出資料，請稍候。';
 
   try{
-   await sendToGoogle(data);
-
-   $('submitStatus').textContent=
-    '資料已送往 Google Apps Script，但尚無法驗證試算表是否成功寫入。請由管理者確認紀錄。';
-
-   $('submitProfile').textContent='已送出（待確認）';
+   const delivery=await sendToGoogle(data);
+   // iframe 載入僅代表提交流程已返回，不能當作試算表寫入確認。
+   if(delivery.verified===false){
+    $('submitProfile').textContent='已送出（待確認）';
+    show('complete');
+   }
 
   }catch(error){
    $('submitStatus').textContent=error.message;
