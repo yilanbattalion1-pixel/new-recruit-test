@@ -42,6 +42,14 @@ function doPost(e){
       }
       ids.add(r.id);
     }
+    if(String(p.questionCount)!==String(responses.length))throw new Error('題數不一致');
+    const reportedScore=Number(p.score);
+    const expectedScore=Math.round(responses.reduce((sum,r)=>sum+r.score,0)/responses.length);
+    if(!Number.isFinite(reportedScore)||reportedScore!==expectedScore)throw new Error('總分與逐題分數不一致');
+    if(!String(p.rank||'').trim()||!String(p.moneyRank||'').trim())throw new Error('缺少稱號');
+    const moneyScore=Number(p.moneyScore);
+    if(!Number.isFinite(moneyScore)||moneyScore<0||moneyScore>100)throw new Error('金錢分數不合法');
+    // 只檢查傳入資料的一致性，無法證明前端題目及配分未遭竄改。
     lock.waitLock(20000);
     const sheet=v2GetSheet();
     sheet.appendRow([
