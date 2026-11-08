@@ -9,8 +9,8 @@ function v2SafeCell(value){
   return /^[=+\-@\t\r]/.test(s)?"'"+s:s;
 }
 function v2GetSheet(){
-  const ss=SpreadsheetApp.getActiveSpreadsheet();
-  if(!ss)throw new Error('請將此程式綁定至目標試算表');
+  const ss=SpreadsheetApp.openById('15vfynyVmd-ykGEzOK-i5QSXBxd8Tqp1b3GuQus5FZTA');
+  if(!ss)throw new Error('找不到測試試算表');
   let sheet=ss.getSheetByName(V2_SHEET_NAME);
   if(!sheet)sheet=ss.insertSheet(V2_SHEET_NAME);
   if(sheet.getLastRow()===0){
