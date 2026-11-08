@@ -627,6 +627,8 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  const questions=QUIZ_CONFIG.questions.map(q=>[q.title,q.options]);
  const moneyQuestionIndex=QUIZ_CONFIG.questions.findIndex(q=>q.id===QUIZ_CONFIG.moneyQuestionId);
  if(moneyQuestionIndex<0)throw Error('找不到金錢規劃題目');
+ QUIZ_CONFIG.outcomes=outcomes;
+ QUIZ_CONFIG.moneyOutcomes=moneyOutcomes;
  if(!Array.isArray(QUIZ_CONFIG.moneyOutcomes)||QUIZ_CONFIG.moneyOutcomes.length!==4)throw Error('金錢規劃稱號設定錯誤');
 
   const $=id=>document.getElementById(id);
