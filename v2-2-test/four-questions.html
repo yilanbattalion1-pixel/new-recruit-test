@@ -1,0 +1,1063 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101321">
+<title>義務役新兵生存適應力測驗</title>
+
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark}
+
+body{
+ margin:0;
+ background:#101321;
+ color:#fff;
+ font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.wrap{max-width:560px;margin:auto;padding:13px 13px 24px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#c7c9da;letter-spacing:.12em}
+.brand{color:#c4adff;font-weight:900}
+.hero{text-align:center;padding:13px 0 15px}
+.eyebrow{font-size:9px;letter-spacing:.2em;color:#b5a1ed;margin-bottom:5px}
+h1{font-size:clamp(22px,6vw,30px);line-height:1.3;font-weight:1000;color:#f8f5ff;text-shadow:0 2px 0 #51417c;margin:0}
+.subtitle{font-size:11px;color:#c8ccdc;margin-top:5px}
+.tags{display:flex;justify-content:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+.tag{font-size:9px;padding:4px 8px;border:1px solid #4f4b70;background:#24263b;border-radius:4px;color:#ded5fa}
+.panel{background:#22273d;border:1px solid #515675;border-radius:12px;box-shadow:0 8px 20px #0004}
+.inner{padding:16px}
+.muted{color:#d0d3e1}
+.label{font-size:9px;color:#b7a8e5;letter-spacing:.15em}
+
+.main-btn{
+ background:linear-gradient(100deg,#765bc6,#426bb9);
+ border:1px solid #b5a2f1;
+ border-radius:8px;
+ padding:12px 14px;
+ color:white;
+ font-size:13px;
+ font-weight:900;
+ width:100%;
+ cursor:pointer;
+}
+.sub-btn{
+ background:#30354e;
+ border:1px solid #666987;
+ border-radius:8px;
+ padding:10px 12px;
+ color:white;
+ font-size:11px;
+ font-weight:800;
+ cursor:pointer;
+}
+button:disabled{opacity:.35;cursor:not-allowed}
+button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
+
+.rules{
+ background:#171c2d;
+ border:1px solid #414966;
+ border-radius:8px;
+ padding:12px;
+ margin-top:13px;
+ font-size:11px;
+ line-height:1.8;
+ color:#e0e2ed;
+}
+.progress-meta{display:flex;justify-content:space-between;font-size:10px;color:#d5d7e4;margin-bottom:7px}
+.track{height:7px;background:#393e55;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#9679e6,#86d3ff,#a9e8bd);border-radius:20px;transition:width .3s}
+.qcard{margin-top:12px;padding:15px}
+.qnum{font-size:10px;color:#c1aaff;letter-spacing:.1em;font-weight:900}
+.qtitle{font-size:15px;line-height:1.65;color:#fff;font-weight:900;margin:10px 0 13px}
+.opts{display:grid;gap:7px}
+.option{
+ width:100%;
+ display:flex;
+ gap:9px;
+ align-items:flex-start;
+ text-align:left;
+ padding:10px;
+ border:1px solid #555c79;
+ border-radius:8px;
+ background:#2c3249;
+ color:#f3f4fa;
+ font-size:12px;
+ line-height:1.55;
+ cursor:pointer;
+}
+.option.selected{border:2px solid #b9a2ff;background:#393451;padding:9px}
+.letter{
+ flex:0 0 23px;
+ height:23px;
+ display:grid;
+ place-items:center;
+ border-radius:5px;
+ background:#484362;
+ font-weight:900;
+ color:white;
+ font-size:11px;
+}
+.selected .letter{background:#8b70cc}
+.nav{display:grid;grid-template-columns:94px 1fr;gap:8px;margin-top:13px}
+
+.result-head{text-align:center;padding:3px 0 12px}
+.result-head .icon{font-size:28px}
+.result-head h2{font-size:20px;font-weight:1000;color:#e0d5ff;margin:2px 0 0}
+.scorebox{text-align:center;padding:15px;background:#171c2e;border:1px solid #555578;border-radius:9px}
+.score{font-size:52px;font-weight:1000;line-height:1.1;color:#9bd8ff}
+.rank{font-size:17px;font-weight:1000;color:#d5c2ff;margin-top:9px}
+.rate{font-size:11px;color:#b9e7c8;margin-top:4px}
+.result-block{padding:12px;border-radius:8px;background:#292e46;border:1px solid #505775;margin-top:9px}
+.result-block h3{font-size:11px;font-weight:900;margin:0 0 5px}
+.result-block p{font-size:12px;line-height:1.7;color:#f0f1f8;margin:0}
+.moneybox{margin-top:12px;padding:15px;background:#171c2e;border:1px solid #6d826f;border-radius:9px;text-align:center}
+.money-score{font-size:32px;font-weight:1000;color:#b9e8c7;margin-top:6px}
+.money-rank{font-size:15px;font-weight:900;color:#d5c2ff;margin-top:6px}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.summary div{display:flex;justify-content:space-between;gap:4px;padding:8px;border-radius:6px;background:#292e46;font-size:10px;color:#e7e8f0}
+
+.form-group{margin-top:18px}
+.form-title{
+ font-size:12px;
+ font-weight:900;
+ color:#e0d5ff;
+ margin-bottom:9px;
+ line-height:1.6;
+}
+.required-mark{color:#ff8796;font-size:11px;font-weight:900;margin-left:7px}
+.form-group.invalid .form-title{color:#ffb0bb}
+.form-group.invalid .text-input,.form-group.invalid .choice-list{outline:2px solid #ff8796;outline-offset:3px;border-radius:6px}
+.form-hint{
+ font-size:10px;
+ color:#b8bfd3;
+ line-height:1.7;
+ margin:-4px 0 9px;
+}
+.text-input{
+ display:block;
+ width:100%;
+ padding:12px;
+ background:#171c2d;
+ color:#fff;
+ border:1px solid #666987;
+ border-radius:8px;
+ font:inherit;
+ font-size:13px;
+}
+.text-input:focus{outline:2px solid #b9a2ff;outline-offset:1px}
+.choice-list{display:grid;gap:7px}
+.choice{
+ display:flex;
+ align-items:flex-start;
+ gap:10px;
+ padding:11px;
+ border:1px solid #555c79;
+ background:#2c3249;
+ border-radius:8px;
+ font-size:12px;
+ line-height:1.6;
+ cursor:pointer;
+}
+.choice:has(input:checked){border-color:#b9a2ff;background:#393451}
+.choice input{accent-color:#b9a2ff;margin:3px 0 0;flex-shrink:0}
+.consent{
+ margin-top:20px;
+ padding:13px;
+ background:#171c2d;
+ border:1px solid #555c79;
+ border-radius:8px;
+ font-size:11px;
+ line-height:1.8;
+ color:#d0d3e1;
+}
+.consent label{
+ display:flex;
+ align-items:flex-start;
+ gap:9px;
+ margin-top:10px;
+ cursor:pointer;
+ color:#fff;
+}
+.consent input{accent-color:#b9a2ff;margin-top:4px}
+.form-actions{display:grid;grid-template-columns:94px 1fr;gap:8px;margin-top:18px}
+.status{text-align:center;margin-top:12px;font-size:11px;line-height:1.7;color:#b9e8c7}
+.hidden{display:none!important}
+.screen{animation:pop .22s ease}
+@keyframes pop{
+ from{opacity:0;transform:translateY(5px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@media(max-height:740px){
+ .wrap{padding-top:8px}
+ .hero{padding:8px 0 10px}
+ h1{font-size:23px}
+ .qcard{padding:12px}
+ .qtitle{margin:7px 0 10px;font-size:14px}
+ .option{padding:8px;font-size:11px;line-height:1.45}
+ .option.selected{padding:7px}
+ .opts{gap:6px}
+ .nav{margin-top:9px}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+ <div class="top">
+  <span class="brand">◆ SURVIVAL SYSTEM</span>
+  <span>VER. 1.5 MOBILE</span>
+ </div>
+
+ <header class="hero">
+  <div class="eyebrow">NEW RECRUIT · SPECIAL TEST</div>
+  <h1>義務役新兵生存適應力測驗</h1>
+  <div class="subtitle">你的營區生存能力，究竟可以拿下幾分？</div>
+  <div class="tags">
+   <span class="tag">5 道情境題</span>
+   <span class="tag">即時評級</span>
+   <span class="tag">PIXEL RPG</span>
+  </div>
+ </header>
+
+ <!-- 首頁 -->
+ <section id="intro" class="panel inner screen">
+  <div class="label">MISSION START / 任務簡介</div>
+  <div style="text-align:center;margin-top:12px">
+   <div style="font-size:32px">🎖️</div>
+   <div style="font-weight:900;margin-top:8px;color:#e0d5ff;font-size:17px">
+    歡迎來到新兵生存試煉
+   </div>
+   <p class="muted" style="font-size:12px;line-height:1.8;margin-top:8px">
+    突發集合、販賣機排隊、打掃勤務、放假延後、金錢規劃……
+    你會如何應對？完成測驗，解鎖你的新兵稱號。
+   </p>
+  </div>
+  <div class="rules">
+   <div style="color:#9bd8ff;font-weight:900;margin-bottom:4px">▸ 測驗規則</div>
+   <div>01　共 5 題，每題選一個答案。</div>
+   <div>02　可返回上一題修改答案。</div>
+   <div>03　完成後取得專屬適應力評級。</div>
+   <div>04　查看結果後可填寫基本資料調查。</div>
+  </div>
+  <button id="start" class="main-btn" style="margin-top:16px">
+   ▶　開始測驗
+  </button>
+  <p style="text-align:center;margin-top:12px;font-size:9px;color:#aeb4c9">
+   本測驗純屬娛樂，並非正式軍事或財務評量。
+  </p>
+ </section>
+
+ <!-- 第一階段：題目 -->
+ <section id="quiz" class="hidden screen">
+  <div class="progress-meta">
+   <span id="step">QUESTION 01 / 05</span>
+   <span id="percent">20%</span>
+  </div>
+  <div class="track">
+   <div id="progress" class="fill" style="width:20%"></div>
+  </div>
+  <div class="panel qcard">
+   <div id="qnum" class="qnum">MISSION 01</div>
+   <h2 id="question" class="qtitle"></h2>
+   <div id="options" class="opts"></div>
+   <div class="nav">
+    <button id="back" class="sub-btn" disabled>← 上一題</button>
+    <button id="next" class="main-btn" disabled>下一題 →</button>
+   </div>
+  </div>
+  <div style="text-align:center;margin-top:12px;font-size:9px;color:#aeb4c9">
+   SELECT ONE ANSWER TO CONTINUE
+  </div>
+ </section>
+
+ <!-- 第二階段：結果 -->
+ <section id="result" class="hidden screen">
+  <div class="result-head">
+   <div class="icon">🏆</div>
+   <div class="eyebrow" style="margin-top:8px">MISSION COMPLETED</div>
+   <h2>你的測驗結果</h2>
+  </div>
+
+  <div class="panel inner">
+   <div class="scorebox">
+    <div class="label">YOUR SURVIVAL SCORE</div>
+    <div>
+     <span id="score" class="score">0</span>
+     <span class="muted" style="font-size:14px"> / 100</span>
+    </div>
+    <div class="track" style="margin-top:12px">
+     <div id="scorebar" class="fill" style="width:0"></div>
+    </div>
+    <div id="rank" class="rank"></div>
+    <div class="rate">適應指數　<span id="rate"></span></div>
+   </div>
+
+   <div class="result-block">
+    <h3 style="color:#9bd8ff">▸ 生存評語</h3>
+    <p id="desc"></p>
+   </div>
+   <div class="result-block">
+    <h3 style="color:#b9e8c7">▸ 生存小提醒</h3>
+    <p id="tip"></p>
+   </div>
+
+   <div class="moneybox">
+    <div class="label">MONEY MANAGEMENT / 金錢規劃能力</div>
+    <div class="money-score">
+     <span id="moneyScore">0</span> / 100
+    </div>
+    <div class="track" style="margin-top:10px">
+     <div id="moneybar" class="fill" style="width:0"></div>
+    </div>
+    <div id="moneyRank" class="money-rank"></div>
+    <p id="moneyDesc" style="font-size:11px;line-height:1.7;color:#d0d3e1;margin:9px 0 0"></p>
+   </div>
+
+   <div class="label" style="margin-top:16px">
+    ANSWER RECORD / 作答紀錄
+   </div>
+   <div id="summary" class="summary"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+   <button id="restart" class="main-btn">↻ 重新測驗</button>
+   <button id="share" class="sub-btn">▣ 複製結果</button>
+  </div>
+  <p id="status" class="status" aria-live="polite"></p>
+
+  <div class="panel inner" style="margin-top:15px">
+   <div class="label">NEXT MISSION / 基本資料調查</div>
+   <p class="muted" style="font-size:12px;line-height:1.8">
+    已完成測驗！接下來可填寫基本資料，協助進行新兵背景與適應力分析。
+   </p>
+   <button id="goProfile" class="main-btn">
+    下一步：填寫基本資料 →
+   </button>
+  </div>
+ </section>
+
+ <!-- 第三階段：基本資料 -->
+ <section id="profile" class="hidden screen">
+  <div class="panel inner">
+   <div class="label">PERSONAL INFORMATION / STEP 03</div>
+   <h2 style="font-size:20px;color:#e0d5ff;margin:10px 0">
+    基本資料調查
+   </h2>
+   <p class="muted" style="font-size:11px;line-height:1.8">
+    請依實際情況填寫。基本資料不影響測驗分數，
+    也不會包含在公開分享的測驗結果中。
+   </p>
+
+   <form id="profileForm" novalidate>
+
+    <div class="form-group">
+     <div class="form-title">01 / 姓名<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <input
+      id="personName"
+      name="personName"
+      class="text-input"
+      type="text"
+      maxlength="50"
+      autocomplete="name"
+      placeholder="請輸入姓名"
+      required
+     >
+    </div>
+
+    <div class="form-group">
+     <div class="form-title">02 / 家庭結構<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <div class="choice-list">
+      <label class="choice"><input type="radio" name="family" value="雙親家庭" required>雙親家庭</label>
+      <label class="choice"><input type="radio" name="family" value="單親家庭">單親家庭</label>
+      <label class="choice"><input type="radio" name="family" value="雙親皆已過世">雙親皆已過世</label>
+     </div>
+    </div>
+
+    <div class="form-group">
+     <div class="form-title">03 / 家庭每月總收入<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <p class="form-hint">
+      請依家庭每月總收入選擇最符合的區間，單位為新臺幣。
+     </p>
+     <div class="choice-list">
+      <label class="choice"><input type="radio" name="income" value="未滿10萬元" required>未滿 10 萬元</label>
+      <label class="choice"><input type="radio" name="income" value="10萬至未滿30萬元">10 萬至未滿 30 萬元</label>
+      <label class="choice"><input type="radio" name="income" value="30萬至未滿60萬元">30 萬至未滿 60 萬元</label>
+      <label class="choice"><input type="radio" name="income" value="60萬元以上">60 萬元以上</label>
+      <label class="choice"><input type="radio" name="income" value="不清楚或不願回答">不清楚／不願回答</label>
+     </div>
+    </div>
+
+    <div class="form-group">
+     <div class="form-title">04 / 個人債務狀況<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <p class="form-hint">
+      請依目前個人尚未清償的債務總額填寫。
+     </p>
+     <div class="choice-list">
+      <label class="choice"><input type="radio" name="debt" value="無負債" required>目前沒有負債</label>
+      <label class="choice"><input type="radio" name="debt" value="未滿10萬元">有負債，未滿 10 萬元</label>
+      <label class="choice"><input type="radio" name="debt" value="10萬至未滿50萬元">有負債，10 萬至未滿 50 萬元</label>
+      <label class="choice"><input type="radio" name="debt" value="50萬至未滿100萬元">有負債，50 萬至未滿 100 萬元</label>
+      <label class="choice"><input type="radio" name="debt" value="100萬元以上">有負債，100 萬元以上</label>
+      <label class="choice"><input type="radio" name="debt" value="不願回答">不願回答</label>
+     </div>
+    </div>
+
+    <div class="form-group">
+     <div class="form-title">05 / 最高學歷<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <p class="form-hint">
+      以已畢業或取得學位的最高學歷為準。
+     </p>
+     <div class="choice-list">
+      <label class="choice"><input type="radio" name="education" value="國中以下" required>國中（含）以下</label>
+      <label class="choice"><input type="radio" name="education" value="高中職">高中／高職</label>
+      <label class="choice"><input type="radio" name="education" value="專科">專科</label>
+      <label class="choice"><input type="radio" name="education" value="大學">大學</label>
+      <label class="choice"><input type="radio" name="education" value="碩士">碩士</label>
+      <label class="choice"><input type="radio" name="education" value="博士">博士</label>
+     </div>
+    </div>
+
+    <div class="form-group">
+     <div class="form-title">06 / 正式工作經驗<span class="required-mark" aria-label="必填">＊必填</span></div>
+     <p class="form-hint">
+      不包含實習、工讀或兼職打工。若曾有多份正式工作，請合計工作年資。
+     </p>
+     <div class="choice-list">
+      <label class="choice"><input type="radio" name="work" value="無正式工作經驗" required>沒有正式工作經驗</label>
+      <label class="choice"><input type="radio" name="work" value="未滿1年">未滿 1 年</label>
+      <label class="choice"><input type="radio" name="work" value="1年至未滿3年">1 年至未滿 3 年</label>
+      <label class="choice"><input type="radio" name="work" value="3年至未滿5年">3 年至未滿 5 年</label>
+      <label class="choice"><input type="radio" name="work" value="5年以上">5 年以上</label>
+     </div>
+    </div>
+
+    <div class="consent">
+     <strong style="color:#9bd8ff">▸ 個人資料蒐集告知</strong>
+     <p>
+      本問卷將蒐集姓名、家庭結構、家庭收入區間、
+      個人債務區間、最高學歷、工作經驗及五題測驗結果，
+      用於新兵背景與適應力之統計分析。
+      資料將傳送至問卷管理者指定的 Google 試算表。
+      請確認你了解資料蒐集目的後再提交。
+     </p>
+     <p>
+      問卷管理者應於正式上線前補充其身分、聯絡方式、
+      資料保存期限、使用地區、資料當事人權利及行使方式。
+     </p>
+     <label>
+      <input id="consentCheck" type="checkbox" required>
+      <span>我已閱讀上述說明，並同意提供資料供本問卷統計分析使用。</span>
+     </label>
+    </div>
+
+    <div class="form-actions">
+     <button id="profileBack" type="button" class="sub-btn">
+      ← 返回結果
+     </button>
+     <button id="submitProfile" type="submit" class="main-btn">
+      確認送出 →
+     </button>
+    </div>
+
+    <p id="submitStatus" class="status" role="status" aria-live="polite"></p>
+   </form>
+  </div>
+ </section>
+
+ <!-- 提交完成頁 -->
+ <section id="complete" class="hidden screen">
+  <div class="panel inner" style="text-align:center">
+   <div style="font-size:42px;margin:12px 0">✅</div>
+   <div class="eyebrow">MISSION COMPLETED</div>
+   <h2 style="font-size:21px;color:#e0d5ff">
+    問卷已送出！
+   </h2>
+   <p class="muted" style="font-size:12px;line-height:1.9">
+    感謝你完成義務役新兵生存適應力測驗與基本資料調查！
+   </p>
+   <div class="rules">
+    <strong>傳送狀態：已送出（待確認）</strong><br>
+    資料已送往 Google Apps Script，但此頁無法直接驗證 Google 試算表是否寫入成功。若需確認，請聯絡問卷管理者。
+   </div>
+   <button id="completeRestart" class="main-btn" style="margin-top:16px">
+    ↻ 重新測驗一次
+   </button>
+  </div>
+ </section>
+
+ <footer style="text-align:center;margin-top:18px;font-size:9px;color:#858ca5;letter-spacing:.1em">
+  NEW RECRUIT SURVIVAL TEST · 2026
+ </footer>
+
+</div>
+
+<script>
+(()=>{
+ /*
+  ==================================================
+  GOOGLE APPS SCRIPT 回傳設定
+
+  已整合你提供的正式部署網址。
+
+  試算表：
+  https://docs.google.com/spreadsheets/d/
+  1KQckXprMfZrLG6Ew_rgBupH40r7MGI0m/edit
+
+  注意：Apps Script 須已部署並授權，
+  且 doPost(e) 接收欄位須與本程式相符。
+  ==================================================
+ */
+ const GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbz9O230Z836KdQiRHuWsP0w1UWqhtLe-wYJnR76aIDusYSBEDaghrIHBmXllY5JSPNMhQ/exec';
+
+ const QUIZ_CONFIG={
+  version:'2.2-four-question-test',
+  moneyQuestionId:'q5',
+  questions:[
+  {id:'q1', title:'剛入伍第一天晚上，班長突襲叫全連在走廊「集合」，而且限定 30 秒內到位，你的第一反應是？',
+   options:[
+    '慌到鞋帶綁成死結，一邊衝一邊心想「這到底是三小……好想回家……」',
+    '隨手抓了 S 腰帶就往外衝，總之先跟著大部隊站好，發呆順便觀察班長有多凶。',
+    '動作迅速且衣服整齊，甚至還有空順手拉隔壁動作慢的臨兵一把。',
+    '先在床上看別人慌亂，最後 5 秒才踩著極致絲滑的步伐剛好踩線站進隊伍。'
+   ], scores:[15,45,75,90]
+  },
+  {id:'q2', title:'大熱天打靶完，班長宣布開放「10 分鐘投飲料與抽菸」，但販賣機前排了 50 個人，你會？',
+   options:[
+    '算了不排了，回去灌水壺裡溫溫的白開水，坐在樹下發呆享受難得的安靜。',
+    '眼神鎖定排隊的前面同袍，果斷掏出銅板：「兄弟，幫我買瓶黑松沙士，找錢不用給！」',
+    '默默跟著排，就算最後只剩 30 秒能一口氣灌完飲料也覺得爽爆。',
+    '完全不排隊，直接走到旁邊跟班長或幹部哈拉借煙／聊水生活，順便拿到公差福利。'
+   ], scores:[15,45,75,90]
+  },
+  {id:'q4', title:'結訓前夕主官突然宣佈「因為個人裝備與內務保養不落實，全連本週放假全部延後兩小時（罰勤）」，你當下的心情是？',
+   options:[
+    '靈魂瞬間出竅，恨不得馬上打 1985，接下來整天講話都有濃濃怨氣。',
+    '迅速切換成「入定模式」：反正遲早會放假，多留在營區發呆兩小時也能忍受。',
+    '無奈但迅速接受，開始約鄰兵等下放假一起衝去吃大餐、打幾把手遊撫慰心靈。',
+    '早就料到會有這招，內心完全毫無波動，甚至已經在腦海裡把罰勤這兩小時安排成冥想時間。'
+   ], scores:[15,45,75,90]
+  },
+  {id:'q5', title:'當兵期間每個月都有穩定的收入，加上營區生活開銷相對較少，你對自己的金錢運用有什麼規劃？',
+   options:[
+    '完全沒有規劃。錢的事情以後再說，反正現在也沒特別想過要怎麼運用。',
+    '有多少就花多少。領到薪水就拿來享受生活，想買什麼就買什麼，存錢全看月底剩多少。',
+    '有儲蓄意識，但缺乏明確目標。想趁當兵期間定期存錢，不過還沒想好這筆錢未來要拿來做什麼。',
+    '儲蓄與消費都有明確規劃。打算利用當兵期間收入穩定、生活開銷較少的優勢，每月固定存錢，也為未來想買的東西或其他支出設定預算。'
+   ], scores:[15,45,75,90]
+  }
+ ]};
+
+ const points=[15,45,75,90];
+
+ const outcomes=[
+  {
+   max:30,
+   name:'玻璃心菜鳥',
+   rate:'40%',
+   desc:'你對環境變化相當敏感，自由被剝奪時會有強烈的戒斷症狀。在營區裡容易覺得時間過得超慢。',
+   tip:'記得「平安退伍才是真的」！試著把這段時間當作休養生息，離長官遠一點、多跟鄰兵講幹話，幾個月很快就過去了！'
+  },
+  {
+   max:60,
+   name:'薪水小偷大師',
+   rate:'95%',
+   desc:'你擁有極強的「閃避技能」與低調生存本領。知道什麼時候該裝忙、什麼時候該隱形，絕對不會成為長官關注的焦點。',
+   tip:'繼續保持這種「不突出、不落後、跟著大部隊走」的精髓，你的義務役生涯將會極度順遂，平安過完每一天！'
+  },
+  {
+   max:85,
+   name:'營區人情世故王',
+   rate:'85%',
+   desc:'你情商高、隨和且懂得苦中作樂。不僅能快速適應團體生活，還能用幽默感和社交能力感染身邊的臨兵，大家都很喜歡跟你同一班。',
+   tip:'人緣好是優勢，但也小心別因為太熱心而攬了太多苦工在身上，偶爾適度「裝傻」會讓你的兵役生活更輕鬆！'
+  },
+  {
+   max:100,
+   name:'老油條薪水強者',
+   rate:'99%',
+   desc:'你已經修煉成精！營區的繁瑣規定和高壓環境對你來說根本是小菜一碟，甚至能精確掌握任何制度死角，過得比誰都滋潤。',
+   tip:'能力太強容易被抓去當班長或拿來當標竿，記得偶爾裝個傻適度放水，才能真正低調平安退伍！'
+  }
+ ];
+
+ const moneyOutcomes=[
+  {
+   name:'金錢規劃迷航兵',
+   desc:'你目前對金錢還沒有明確的規劃。當兵期間生活開銷相對較少，正是建立理財習慣的好時機！不妨從記帳、了解自己的花費開始，逐步設定儲蓄目標。'
+  },
+  {
+   name:'月光享樂特攻隊',
+   desc:'你重視當下的生活品質，領到薪水就想好好犒賞自己。不過當兵期間收入相對穩定，如果能先預留一部分儲蓄，再安排娛樂開銷，退伍時就不會只剩下滿滿的回憶！'
+  },
+  {
+   name:'佛系儲蓄小尖兵',
+   desc:'你已經具備儲蓄意識，也願意利用當兵期間累積存款！如果能進一步設定具體的儲蓄金額、消費預算與未來目標，就能讓每一筆存下來的錢更有意義。'
+  },
+  {
+   name:'退伍財富規劃王',
+   desc:'你充分掌握當兵期間收入相對穩定、生活開銷較少的優勢！不僅有固定儲蓄計畫，也清楚知道自己想把錢花在哪裡。兼顧儲蓄與消費，讓你在退伍時更有機會帶著一筆存款與明確的財務目標迎接新生活！'
+  }
+ ];
+
+ // 每道題目擁有固定 ID；調整順序不改 ID，新增題目請指定全新 ID。
+ const ids=new Set();
+ for(const q of QUIZ_CONFIG.questions){
+  if(!/^q[0-9]+$/.test(q.id)||ids.has(q.id))throw Error('題目 ID 重複或格式錯誤');
+  ids.add(q.id);
+  if(typeof q.title!=='string'||!q.title.trim()||
+     !Array.isArray(q.options)||q.options.length!==4||
+     q.options.some(x=>typeof x!=='string'||!x.trim())||
+     !Array.isArray(q.scores)||q.scores.length!==4||
+     q.scores.some(x=>!Number.isFinite(x)||x<0||x>100)){
+    throw Error('題目設定錯誤：'+q.id);
+  }
+ }
+ const questions=QUIZ_CONFIG.questions.map(q=>[q.title,q.options]);
+ const moneyQuestionIndex=QUIZ_CONFIG.questions.findIndex(q=>q.id===QUIZ_CONFIG.moneyQuestionId);
+ if(moneyQuestionIndex<0)throw Error('找不到金錢規劃題目');
+ QUIZ_CONFIG.outcomes=outcomes;
+ QUIZ_CONFIG.moneyOutcomes=moneyOutcomes;
+ if(!Array.isArray(QUIZ_CONFIG.moneyOutcomes)||QUIZ_CONFIG.moneyOutcomes.length!==4)throw Error('金錢規劃稱號設定錯誤');
+
+  const $=id=>document.getElementById(id);
+
+ let index=0;
+ let answers=Array(questions.length).fill(-1);
+ let submitting=false;
+ let submissionAttempted=false;
+
+ function show(which){
+  ['intro','quiz','result','profile','complete'].forEach(x=>{
+   $(x).classList.toggle('hidden',x!==which);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+ }
+
+ function render(){
+  const total=questions.length;
+  const current=index+1;
+  const progress=Math.round(current/total*100);
+
+  $('step').textContent=
+   `QUESTION ${String(current).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+
+  $('percent').textContent=`${progress}%`;
+  $('progress').style.width=progress+'%';
+  $('qnum').textContent=`MISSION ${String(current).padStart(2,'0')}`;
+  $('question').textContent=questions[index][0];
+  $('options').replaceChildren();
+
+  questions[index][1].forEach((value,n)=>{
+   const b=document.createElement('button');
+   b.type='button';
+   b.className='option'+(answers[index]===n?' selected':'');
+   b.setAttribute('aria-pressed',answers[index]===n?'true':'false');
+
+   const letter=document.createElement('span');
+   letter.className='letter';
+   letter.textContent='ABCD'[n];
+
+   const optionText=document.createElement('span');
+   optionText.textContent=value;
+
+   b.append(letter,optionText);
+   b.addEventListener('click',()=>{
+    answers[index]=n;
+    render();
+   });
+   $('options').append(b);
+  });
+
+  $('back').disabled=index===0;
+  $('next').disabled=answers[index]<0;
+  $('next').textContent=
+   index===total-1?'查看結果 →':'下一題 →';
+ }
+
+ function begin(){
+  index=0;
+  answers=Array(questions.length).fill(-1);
+  $('profileForm').reset();
+  $('profileForm').querySelectorAll('.form-group.invalid').forEach(group=>group.classList.remove('invalid'));
+  $('status').textContent='';
+  $('submitStatus').textContent='';
+  submitting=false;
+  submissionAttempted=false;
+  $('submitProfile').disabled=false;
+  $('submitProfile').textContent='確認送出 →';
+  show('quiz');
+  render();
+ }
+
+ function calculateScore(){
+  return Math.round(
+   answers.reduce((sum,a,i)=>sum+QUIZ_CONFIG.questions[i].scores[a],0)/answers.length
+  );
+ }
+
+ function getOutcome(score){
+  return outcomes.find(x=>score<=x.max)||outcomes[3];
+ }
+
+ function getMoneyOutcome(){
+  return moneyOutcomes[answers[moneyQuestionIndex]];
+ }
+
+ function finish(){
+  if(answers.some((a,i)=>a<0||a>=QUIZ_CONFIG.questions[i].options.length))return;
+
+  const score=calculateScore();
+  const r=getOutcome(score);
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
+  const money=getMoneyOutcome();
+
+  $('score').textContent='0';
+  $('rank').textContent=r.name;
+  $('rate').textContent=r.rate;
+  $('desc').textContent=r.desc;
+  $('tip').textContent=r.tip;
+  $('scorebar').style.width='0%';
+
+  $('moneyScore').textContent=moneyScore;
+  $('moneyRank').textContent=money.name;
+  $('moneyDesc').textContent=money.desc;
+  $('moneybar').style.width=moneyScore+'%';
+
+  $('summary').replaceChildren();
+
+  answers.forEach((a,n)=>{
+   const row=document.createElement('div');
+   const left=document.createElement('span');
+   const right=document.createElement('b');
+
+   left.textContent=`第${n+1}題 ${'ABCD'[a]}`;
+   right.textContent=QUIZ_CONFIG.questions[n].scores[a]+'分';
+   right.style.color='#9bd8ff';
+
+   row.append(left,right);
+   $('summary').append(row);
+  });
+
+  show('result');
+
+  requestAnimationFrame(()=>{
+   $('scorebar').style.width=score+'%';
+  });
+
+  const start=performance.now();
+  function count(t){
+   const p=Math.min(1,(t-start)/800);
+   $('score').textContent=
+    Math.round(score*(1-Math.pow(1-p,3)));
+   if(p<1)requestAnimationFrame(count);
+  }
+  requestAnimationFrame(count);
+ }
+
+ function getSelected(name){
+  return document.querySelector(
+   `input[name="${name}"]:checked`
+  )?.value||'';
+ }
+
+ function collectData(){
+  if(answers.some((a,i)=>!Number.isInteger(a)||a<0||a>=QUIZ_CONFIG.questions[i].options.length))throw Error('尚有題目未作答');
+  const score=calculateScore();
+  const outcome=getOutcome(score);
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
+  const money=getMoneyOutcome();
+
+  const responses=QUIZ_CONFIG.questions.map((q,i)=>({
+   id:q.id,
+   question:q.title,
+   answer:'ABCD'[answers[i]],
+   answerText:q.options[answers[i]],
+   score:q.scores[answers[i]]
+  }));
+  return {
+   schemaVersion:2,
+   quizVersion:QUIZ_CONFIG.version,
+   responsesJson:JSON.stringify(responses),
+   questionCount:responses.length,
+   submittedAt:new Date().toISOString(),
+   name:$('personName').value.trim(),
+   family:getSelected('family'),
+   income:getSelected('income'),
+   debt:getSelected('debt'),
+   education:getSelected('education'),
+   work:getSelected('work'),
+   score:score,
+   rank:outcome.name,
+   moneyScore:moneyScore,
+   moneyRank:money.name,
+   consent:true
+  };
+ }
+
+ /*
+  ==================================================
+  GOOGLE SHEETS 資料提交
+
+  使用 HTML form POST + 隱藏 iframe。
+
+  Google Apps Script 接收端：
+  doPost(e) 讀取 e.parameter 中的欄位。
+
+  重要：
+  iframe 的 load 事件只代表載入完成，
+  不等於 Google 試算表已成功寫入。
+
+  因此本版會顯示「已送出，待確認」，
+  不會把無法驗證的結果宣稱為成功。
+  ==================================================
+ */
+ function sendToGoogle(data){
+  return new Promise((resolve,reject)=>{
+   let url;
+
+   try{
+    url=new URL(GOOGLE_SCRIPT_URL);
+    if(
+     url.protocol!=='https:' ||
+     url.hostname!=='script.google.com' ||
+     !url.pathname.endsWith('/exec')
+    ){
+     throw new Error('invalid URL');
+    }
+   }catch(e){
+    reject(new Error('Google Apps Script 網址格式不正確。'));
+    return;
+   }
+
+   const frameName='submitFrame_'+Date.now();
+   const iframe=document.createElement('iframe');
+   iframe.name=frameName;
+   iframe.style.display='none';
+   iframe.setAttribute('title','問卷資料提交');
+
+   const form=document.createElement('form');
+   form.method='POST';
+   form.action=url.href;
+   form.target=frameName;
+   form.style.display='none';
+
+   Object.entries(data).forEach(([key,value])=>{
+    const input=document.createElement('input');
+    input.type='hidden';
+    input.name=key;
+    input.value=String(value);
+    form.append(input);
+   });
+
+   document.body.append(iframe,form);
+
+   let submitted=false;
+   let settled=false;
+   let timeoutId;
+
+   function cleanup(){
+    clearTimeout(timeoutId);
+    setTimeout(()=>{
+     form.remove();
+     iframe.remove();
+    },1000);
+   }
+
+   iframe.addEventListener('load',()=>{
+    if(!submitted||settled)return;
+    settled=true;
+    cleanup();
+    resolve({verified:false});
+   });
+
+   timeoutId=setTimeout(()=>{
+    if(settled)return;
+    settled=true;
+    cleanup();
+    reject(new Error(
+     '提交等待逾時，無法確認資料是否送達。請先向管理者確認試算表紀錄，避免重複提交。'
+    ));
+   },20000);
+
+   submitted=true;
+
+   try{
+    form.submit();
+   }catch(error){
+    if(!settled){
+     settled=true;
+     cleanup();
+     reject(new Error('表單提交失敗，請檢查網路連線。'));
+    }
+   }
+  });
+ }
+
+ // 提供可診斷的開始入口，避免啟動失敗時按鈕完全沒有提示。
+ window.startV21Quiz=()=>{
+  try{begin();}
+  catch(error){
+   console.error('v2.1 啟動失敗',error);
+   alert('測驗啟動失敗：'+(error&&error.message?error.message:String(error)));
+  }
+ };
+ $('start').addEventListener('click',window.startV21Quiz);
+ $('restart').addEventListener('click',begin);
+ $('completeRestart').addEventListener('click',begin);
+
+ $('back').addEventListener('click',()=>{
+  if(index>0){
+   index--;
+   render();
+  }
+ });
+
+ $('next').addEventListener('click',()=>{
+  if(answers[index]<0)return;
+
+  if(index<questions.length-1){
+   index++;
+   render();
+   window.scrollTo({top:0,behavior:'smooth'});
+  }else{
+   finish();
+  }
+ });
+
+ $('share').addEventListener('click',async()=>{
+  const score=calculateScore();
+  const r=getOutcome(score);
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
+  const money=getMoneyOutcome();
+
+  const msg=
+   `【義務役新兵生存適應力測驗】\n`+
+   `我的分數：${score}/100\n`+
+   `我的稱號：${r.name}\n`+
+   `適應指數：${r.rate}\n`+
+   `金錢規劃：${moneyScore}/100\n`+
+   `理財稱號：${money.name}\n`+
+   `你也來測測自己的營區生存能力！\n`+
+   `${location.href}`;
+
+  try{
+   if(navigator.clipboard&&window.isSecureContext){
+    await navigator.clipboard.writeText(msg);
+   }else{
+    const area=document.createElement('textarea');
+    area.value=msg;
+    area.style.position='fixed';
+    area.style.opacity='0';
+    document.body.append(area);
+    area.select();
+
+    if(!document.execCommand('copy')){
+     area.remove();
+     throw Error('copy failed');
+    }
+    area.remove();
+   }
+   $('status').textContent='✓ 已複製結果，可以分享給朋友！';
+  }catch(e){
+   $('status').textContent='無法自動複製，請截圖保存結果。';
+  }
+ });
+
+ $('goProfile').addEventListener('click',()=>{
+  show('profile');
+ });
+
+ $('profileBack').addEventListener('click',()=>{
+  if(!submitting)show('result');
+ });
+
+ const requiredFields=[
+  {name:'personName',label:'姓名',kind:'text'},
+  {name:'family',label:'家庭結構',kind:'radio'},
+  {name:'income',label:'家庭每月總收入',kind:'radio'},
+  {name:'debt',label:'個人債務狀況',kind:'radio'},
+  {name:'education',label:'最高學歷',kind:'radio'},
+  {name:'work',label:'正式工作經驗',kind:'radio'}
+ ];
+
+ function validateProfile(){
+  const form=$('profileForm');
+  form.querySelectorAll('.form-group.invalid').forEach(group=>group.classList.remove('invalid'));
+  let firstInvalid=null;
+  let firstLabel='';
+  for(const field of requiredFields){
+   const input=form.elements.namedItem(field.name);
+   const valid=field.kind==='text'
+    ?Boolean(input.value.trim())
+    :Boolean(getSelected(field.name));
+   if(!valid){
+    const element=field.kind==='radio'?input[0]:input;
+    const group=element.closest('.form-group');
+    group.classList.add('invalid');
+    if(!firstInvalid){firstInvalid=element;firstLabel=field.label;}
+   }
+  }
+  if(!firstInvalid&&!$('consentCheck').checked){
+   firstInvalid=$('consentCheck');
+   firstLabel='個人資料蒐集同意';
+  }
+  if(firstInvalid){
+   $('submitStatus').textContent='請先完成必填項目：'+firstLabel;
+   firstInvalid.closest('.form-group, .consent').scrollIntoView({behavior:'smooth',block:'center'});
+   firstInvalid.focus({preventScroll:true});
+   return false;
+  }
+  $('submitStatus').textContent='';
+  return true;
+ }
+
+ $('profileForm').addEventListener('input',e=>{
+  const group=e.target.closest('.form-group');
+  if(group)group.classList.remove('invalid');
+ });
+ $('profileForm').addEventListener('change',e=>{
+  const group=e.target.closest('.form-group');
+  if(group)group.classList.remove('invalid');
+ });
+
+ $('profileForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  if(submitting||submissionAttempted)return;
+  if(!validateProfile())return;
+
+  const data=collectData();
+
+  if(!data.name){
+   $('submitStatus').textContent='請填寫姓名。';
+   return;
+  }
+
+  submitting=true;
+  submissionAttempted=true;
+  $('submitProfile').disabled=true;
+  $('submitProfile').textContent='資料傳送中…';
+  $('submitStatus').textContent='正在送出資料，請稍候。';
+
+  try{
+   const delivery=await sendToGoogle(data);
+   // iframe 載入僅代表提交流程已返回，不能當作試算表寫入確認。
+   if(delivery.verified===false){
+    $('submitProfile').textContent='已送出（待確認）';
+    show('complete');
+   }
+
+  }catch(error){
+   $('submitStatus').textContent=error.message;
+   $('submitProfile').textContent='提交狀態待確認';
+  }finally{
+   submitting=false;
+  }
+ });
+})();
+</script>
+</body>
+</html>
