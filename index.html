@@ -513,7 +513,10 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  const GOOGLE_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbx1lRAd11NvoMpdKTarxItlaM6426ZnWVzSYa3vufebOoJHvyzsMjaJ1hPHmQ4zq73D/exec';
 
- const questions=[
+ const QUIZ_CONFIG={
+  version:'2.0-draft',
+  moneyQuestionId:'q5',
+  questions:[
   [
    '剛入伍第一天晚上，班長突襲叫全連在走廊「集合」，而且限定 30 秒內到位，你的第一反應是？',
    [
@@ -613,7 +616,17 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   }
  ];
 
- const $=id=>document.getElementById(id);
+ // v2 問卷設定集中於 GitHub：題目、分數、稱號皆由前端管理。
+ QUIZ_CONFIG.questions=QUIZ_CONFIG.questions.map((item,i)=>({
+  id:'q'+(i+1),title:item[0],options:item[1],scores:[...points]
+ }));
+ QUIZ_CONFIG.outcomes=outcomes;
+ QUIZ_CONFIG.moneyOutcomes=moneyOutcomes;
+ const questions=QUIZ_CONFIG.questions.map(q=>[q.title,q.options]);
+ const moneyQuestionIndex=QUIZ_CONFIG.questions.findIndex(q=>q.id===QUIZ_CONFIG.moneyQuestionId);
+ if(moneyQuestionIndex<0)throw Error('找不到金錢規劃題目');
+
+  const $=id=>document.getElementById(id);
 
  let index=0;
  let answers=Array(questions.length).fill(-1);
@@ -685,7 +698,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
 
  function calculateScore(){
   return Math.round(
-   answers.reduce((sum,a)=>sum+points[a],0)/answers.length
+   answers.reduce((sum,a,i)=>sum+QUIZ_CONFIG.questions[i].scores[a],0)/answers.length
   );
  }
 
@@ -694,7 +707,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  }
 
  function getMoneyOutcome(){
-  return moneyOutcomes[answers[questions.length-1]];
+  return moneyOutcomes[answers[moneyQuestionIndex]];
  }
 
  function finish(){
@@ -702,7 +715,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
 
   const score=calculateScore();
   const r=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
   $('score').textContent='0';
@@ -757,10 +770,21 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  function collectData(){
   const score=calculateScore();
   const outcome=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
+  const responses=QUIZ_CONFIG.questions.map((q,i)=>({
+   id:q.id,
+   question:q.title,
+   answer:'ABCD'[answers[i]],
+   answerText:q.options[answers[i]],
+   score:q.scores[answers[i]]
+  }));
   return {
+   schemaVersion:2,
+   quizVersion:QUIZ_CONFIG.version,
+   responsesJson:JSON.stringify(responses),
+   questionCount:responses.length,
    submittedAt:new Date().toISOString(),
    name:$('personName').value.trim(),
    family:getSelected('family'),
@@ -768,11 +792,6 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
    debt:getSelected('debt'),
    education:getSelected('education'),
    work:getSelected('work'),
-   q1:'ABCD'[answers[0]],
-   q2:'ABCD'[answers[1]],
-   q3:'ABCD'[answers[2]],
-   q4:'ABCD'[answers[3]],
-   q5:'ABCD'[answers[4]],
    score:score,
    rank:outcome.name,
    moneyScore:moneyScore,
@@ -906,7 +925,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  $('share').addEventListener('click',async()=>{
   const score=calculateScore();
   const r=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
   const msg=
