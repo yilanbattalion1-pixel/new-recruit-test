@@ -513,53 +513,51 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  const GOOGLE_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbx1lRAd11NvoMpdKTarxItlaM6426ZnWVzSYa3vufebOoJHvyzsMjaJ1hPHmQ4zq73D/exec';
 
- const questions=[
-  [
-   '剛入伍第一天晚上，班長突襲叫全連在走廊「集合」，而且限定 30 秒內到位，你的第一反應是？',
-   [
+ const QUIZ_CONFIG={
+  version:'2.0-production-compatible',
+  moneyQuestionId:'q5',
+  questions:[
+  {id:'q1', title:'剛入伍第一天晚上，班長突襲叫全連在走廊「集合」，而且限定 30 秒內到位，你的第一反應是？',
+   options:[
     '慌到鞋帶綁成死結，一邊衝一邊心想「這到底是三小……好想回家……」',
     '隨手抓了 S 腰帶就往外衝，總之先跟著大部隊站好，發呆順便觀察班長有多凶。',
     '動作迅速且衣服整齊，甚至還有空順手拉隔壁動作慢的臨兵一把。',
     '先在床上看別人慌亂，最後 5 秒才踩著極致絲滑的步伐剛好踩線站進隊伍。'
-   ]
-  ],
-  [
-   '大熱天打靶完，班長宣布開放「10 分鐘投飲料與抽菸」，但販賣機前排了 50 個人，你會？',
-   [
+   ], scores:[15,45,75,90]
+  },
+  {id:'q2', title:'大熱天打靶完，班長宣布開放「10 分鐘投飲料與抽菸」，但販賣機前排了 50 個人，你會？',
+   options:[
     '算了不排了，回去灌水壺裡溫溫的白開水，坐在樹下發呆享受難得的安靜。',
     '眼神鎖定排隊的前面同袍，果斷掏出銅板：「兄弟，幫我買瓶黑松沙士，找錢不用給！」',
     '默默跟著排，就算最後只剩 30 秒能一口氣灌完飲料也覺得爽爆。',
     '完全不排隊，直接走到旁邊跟班長或幹部哈拉借煙／聊水生活，順便拿到公差福利。'
-   ]
-  ],
-  [
-   '當你分到打掃勤務，結果鄰兵一直偷懶裝忙、把重活都留給你做時，你會？',
-   [
+   ], scores:[15,45,75,90]
+  },
+  {id:'q3', title:'當你分到打掃勤務，結果鄰兵一直偷懶裝忙、把重活都留給你做時，你會？',
+   options:[
     '幹在心裡口難開，自己默默擦完掃完，回寢室再拿棉被蓋著偷罵。',
     '展開「國軍開擺藝術」：拿著掃把擺出精準姿勢，開始跟旁邊的人聊天，裝得比他還忙。',
     '直接開口笑笑地跟對方說：「欸哥們，這區你包一半啦，不然等下班長檢查大家都完蛋。」',
     '找到班長看不見的盲區直接人間蒸發，時間到了再神不知鬼不覺地出現裝作剛掃完。'
-   ]
-  ],
-  [
-   '結訓前夕主官突然宣佈「因為個人裝備與內務保養不落實，全連本週放假全部延後兩小時（罰勤）」，你當下的心情是？',
-   [
+   ], scores:[15,45,75,90]
+  },
+  {id:'q4', title:'結訓前夕主官突然宣佈「因為個人裝備與內務保養不落實，全連本週放假全部延後兩小時（罰勤）」，你當下的心情是？',
+   options:[
     '靈魂瞬間出竅，恨不得馬上打 1985，接下來整天講話都有濃濃怨氣。',
     '迅速切換成「入定模式」：反正遲早會放假，多留在營區發呆兩小時也能忍受。',
     '無奈但迅速接受，開始約鄰兵等下放假一起衝去吃大餐、打幾把手遊撫慰心靈。',
     '早就料到會有這招，內心完全毫無波動，甚至已經在腦海裡把罰勤這兩小時安排成冥想時間。'
-   ]
-  ],
-  [
-   '當兵期間每個月都有穩定的收入，加上營區生活開銷相對較少，你對自己的金錢運用有什麼規劃？',
-   [
+   ], scores:[15,45,75,90]
+  },
+  {id:'q5', title:'當兵期間每個月都有穩定的收入，加上營區生活開銷相對較少，你對自己的金錢運用有什麼規劃？',
+   options:[
     '完全沒有規劃。錢的事情以後再說，反正現在也沒特別想過要怎麼運用。',
     '有多少就花多少。領到薪水就拿來享受生活，想買什麼就買什麼，存錢全看月底剩多少。',
     '有儲蓄意識，但缺乏明確目標。想趁當兵期間定期存錢，不過還沒想好這筆錢未來要拿來做什麼。',
     '儲蓄與消費都有明確規劃。打算利用當兵期間收入穩定、生活開銷較少的優勢，每月固定存錢，也為未來想買的東西或其他支出設定預算。'
-   ]
-  ]
- ];
+   ], scores:[15,45,75,90]
+  }
+ ]};
 
  const points=[15,45,75,90];
 
@@ -613,7 +611,27 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   }
  ];
 
- const $=id=>document.getElementById(id);
+ // 每道題目擁有固定 ID；調整順序不改 ID，新增題目請指定全新 ID。
+ const ids=new Set();
+ for(const q of QUIZ_CONFIG.questions){
+  if(!/^q[0-9]+$/.test(q.id)||ids.has(q.id))throw Error('題目 ID 重複或格式錯誤');
+  ids.add(q.id);
+  if(typeof q.title!=='string'||!q.title.trim()||
+     !Array.isArray(q.options)||q.options.length!==4||
+     q.options.some(x=>typeof x!=='string'||!x.trim())||
+     !Array.isArray(q.scores)||q.scores.length!==4||
+     q.scores.some(x=>!Number.isFinite(x)||x<0||x>100)){
+    throw Error('題目設定錯誤：'+q.id);
+  }
+ }
+ const questions=QUIZ_CONFIG.questions.map(q=>[q.title,q.options]);
+ const moneyQuestionIndex=QUIZ_CONFIG.questions.findIndex(q=>q.id===QUIZ_CONFIG.moneyQuestionId);
+ if(moneyQuestionIndex<0)throw Error('找不到金錢規劃題目');
+ QUIZ_CONFIG.outcomes=outcomes;
+ QUIZ_CONFIG.moneyOutcomes=moneyOutcomes;
+ if(!Array.isArray(QUIZ_CONFIG.moneyOutcomes)||QUIZ_CONFIG.moneyOutcomes.length!==4)throw Error('金錢規劃稱號設定錯誤');
+
+  const $=id=>document.getElementById(id);
 
  let index=0;
  let answers=Array(questions.length).fill(-1);
@@ -685,7 +703,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
 
  function calculateScore(){
   return Math.round(
-   answers.reduce((sum,a)=>sum+points[a],0)/answers.length
+   answers.reduce((sum,a,i)=>sum+QUIZ_CONFIG.questions[i].scores[a],0)/answers.length
   );
  }
 
@@ -694,15 +712,15 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  }
 
  function getMoneyOutcome(){
-  return moneyOutcomes[answers[questions.length-1]];
+  return moneyOutcomes[answers[moneyQuestionIndex]];
  }
 
  function finish(){
-  if(answers.some(a=>a<0))return;
+  if(answers.some((a,i)=>a<0||a>=QUIZ_CONFIG.questions[i].options.length))return;
 
   const score=calculateScore();
   const r=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
   $('score').textContent='0';
@@ -725,7 +743,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
    const right=document.createElement('b');
 
    left.textContent=`第${n+1}題 ${'ABCD'[a]}`;
-   right.textContent=points[a]+'分';
+   right.textContent=QUIZ_CONFIG.questions[n].scores[a]+'分';
    right.style.color='#9bd8ff';
 
    row.append(left,right);
@@ -755,12 +773,30 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  }
 
  function collectData(){
+  if(answers.some((a,i)=>!Number.isInteger(a)||a<0||a>=QUIZ_CONFIG.questions[i].options.length))throw Error('尚有題目未作答');
   const score=calculateScore();
   const outcome=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
+  const responses=QUIZ_CONFIG.questions.map((q,i)=>({
+   id:q.id,
+   question:q.title,
+   answer:'ABCD'[answers[i]],
+   answerText:q.options[answers[i]],
+   score:q.scores[answers[i]]
+  }));
   return {
+   schemaVersion:2,
+   quizVersion:QUIZ_CONFIG.version,
+   responsesJson:JSON.stringify(responses),
+   questionCount:responses.length,
+   // 舊正式接收端仍要求固定 q1～q5 欄位；五題正式版維持向下相容。
+   q1:'ABCD'[answers[0]],
+   q2:'ABCD'[answers[1]],
+   q3:'ABCD'[answers[2]],
+   q4:'ABCD'[answers[3]],
+   q5:'ABCD'[answers[4]],
    submittedAt:new Date().toISOString(),
    name:$('personName').value.trim(),
    family:getSelected('family'),
@@ -768,11 +804,6 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
    debt:getSelected('debt'),
    education:getSelected('education'),
    work:getSelected('work'),
-   q1:'ABCD'[answers[0]],
-   q2:'ABCD'[answers[1]],
-   q3:'ABCD'[answers[2]],
-   q4:'ABCD'[answers[3]],
-   q5:'ABCD'[answers[4]],
    score:score,
    rank:outcome.name,
    moneyScore:moneyScore,
@@ -880,7 +911,15 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
   });
  }
 
- $('start').addEventListener('click',begin);
+ // 提供可診斷的開始入口，避免啟動失敗時按鈕完全沒有提示。
+ window.startV21Quiz=()=>{
+  try{begin();}
+  catch(error){
+   console.error('v2.1 啟動失敗',error);
+   alert('測驗啟動失敗：'+(error&&error.message?error.message:String(error)));
+  }
+ };
+ $('start').addEventListener('click',window.startV21Quiz);
  $('restart').addEventListener('click',begin);
  $('completeRestart').addEventListener('click',begin);
 
@@ -906,7 +945,7 @@ button:focus-visible{outline:3px solid #8bd7ff;outline-offset:2px}
  $('share').addEventListener('click',async()=>{
   const score=calculateScore();
   const r=getOutcome(score);
-  const moneyScore=points[answers[questions.length-1]];
+  const moneyScore=QUIZ_CONFIG.questions[moneyQuestionIndex].scores[answers[moneyQuestionIndex]];
   const money=getMoneyOutcome();
 
   const msg=
