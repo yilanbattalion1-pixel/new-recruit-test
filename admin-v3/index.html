@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>義務役新兵問卷｜管理後台</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#101722;color:#eee;font-family:Arial,"Noto Sans TC",sans-serif}
+h1{font-size:24px}
+.card{background:#1c2a3b;padding:16px;border-radius:14px;margin:14px 0}
+input,textarea{width:100%;padding:12px;margin:6px 0 12px;border-radius:8px;border:1px solid #52647a;background:#101722;color:white;font-size:16px}
+button{padding:10px 14px;border:0;border-radius:8px;margin:4px;background:#36516e;color:white;font-size:15px}
+.primary{background:#2388d1}
+.danger{background:#873f4b}
+.option{border:1px solid #42546b;padding:10px;border-radius:10px;margin:10px 0}
+.muted{color:#aab8c8;font-size:13px}
+</style>
+</head>
+<body>
+<h1>義務役新兵問卷</h1>
+<p class="muted">v3.0 題目管理原型｜獨立測試，不連接 v2 正式資料</p>
+
+<div class="card">
+<h2>題目管理</h2>
+<button class="primary" onclick="addQuestion()">＋ 新增題目</button>
+<div id="questions"></div>
+</div>
+
+<div class="card">
+<h2>題目編輯</h2>
+<div id="editor">請先選擇題目</div>
+</div>
+
+<div class="card">
+<h2>預覽與匯出</h2>
+<button onclick="preview()">預覽問卷</button>
+<button class="primary" onclick="exportData()">下載設定 JSON</button>
+<div id="previewArea"></div>
+</div>
+
+<script>
+const KEY="recruit_v3_draft";
+let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
+ title:"義務役新兵生存適應力測驗",
+ questions:[{
+  id:"q1",
+  text:"如果遇到不熟悉的營區規定，你會怎麼做？",
+  options:[
+   {id:"a",text:"先觀察別人",score:15},
+   {id:"b",text:"詢問同梯",score:45},
+   {id:"c",text:"詢問幹部",score:75},
+   {id:"d",text:"先確認規定",score:90}
+  ]
+ }]
+};
+let selected=0;
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(data));
+}
+function render(){
+ let html="";
+ data.questions.forEach((q,i)=>{
+  html+=`<div class="option">
+  <button onclick="selectQ(${i})">編輯第 ${i+1} 題</button>
+  <button onclick="moveQ(${i},-1)">↑</button>
+  <button onclick="moveQ(${i},1)">↓</button>
+  <button class="danger" onclick="deleteQ(${i})">刪除</button>
+  <div>${escapeHTML(q.text||"尚未填寫題目")}</div>
+  </div>`;
+ });
+ document.getElementById("questions").innerHTML=html;
+ renderEditor();
+}
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function selectQ(i){selected=i;renderEditor();}
+function addQuestion(){
+ data.questions.push({
+  id:"q"+Date.now(),text:"",
+  options:[
+   {id:"a"+Date.now(),text:"選項 1",score:0},
+   {id:"b"+Date.now(),text:"選項 2",score:0}
+  ]
+ });
+ selected=data.questions.length-1;
+ save();render();
+}
+function deleteQ(i){
+ if(!confirm("確定刪除這一題？"))return;
+ data.questions.splice(i,1);
+ selected=Math.max(0,Math.min(selected,data.questions.length-1));
+ save();render();
+}
+function moveQ(i,d){
+ let n=i+d;
+ if(n<0||n>=data.questions.length)return;
+ [data.questions[i],data.questions[n]]=[data.questions[n],data.questions[i]];
+ selected=n;save();render();
+}
+function renderEditor(){
+ const box=document.getElementById("editor");
+ const q=data.questions[selected];
+ if(!q){box.innerHTML="目前沒有題目";return;}
+ let html=`<label>問題</label>
+ <textarea id="qtext" rows="3">${escapeHTML(q.text)}</textarea>
+ <h3>選項（最少 2 個，最多 10 個）</h3>`;
+ q.options.forEach((o,i)=>{
+  html+=`<div class="option">
+  <label>選項 ${i+1}</label>
+  <input id="ot${i}" value="${escapeHTML(o.text)}" placeholder="輸入選項內容">
+  <label>分數</label>
+  <input id="os${i}" type="number" value="${o.score}">
+  <button onclick="moveOption(${i},-1)">↑ 上移</button>
+  <button onclick="moveOption(${i},1)">↓ 下移</button>
+  <button class="danger" onclick="deleteOption(${i})" ${q.options.length<=2?"disabled":""}>刪除選項</button>
+  </div>`;
+ });
+ html+=`<button class="primary" onclick="addOption()" ${q.options.length>=10?"disabled":""}>＋ 增加選項</button>
+ <button onclick="saveEditor()">儲存本題</button>`;
+ box.innerHTML=html;
+}
+function saveEditor(){
+ const q=data.questions[selected];
+ if(!q)return;
+ q.text=document.getElementById("qtext").value;
+ q.options.forEach((o,i)=>{
+  o.text=document.getElementById("ot"+i).value;
+  o.score=Number(document.getElementById("os"+i).value)||0;
+ });
+ save();render();alert("本機草稿已儲存");
+}
+function addOption(){
+ const q=data.questions[selected];
+ if(!q||q.options.length>=10)return;
+ q.options.push({id:"o"+Date.now(),text:"新選項",score:0});
+ save();renderEditor();
+}
+function deleteOption(i){
+ const q=data.questions[selected];
+ if(!q||q.options.length<=2)return;
+ q.options.splice(i,1);save();renderEditor();
+}
+function moveOption(i,d){
+ const q=data.questions[selected],n=i+d;
+ if(!q||n<0||n>=q.options.length)return;
+ [q.options[i],q.options[n]]=[q.options[n],q.options[i]];
+ save();renderEditor();
+}
+function preview(){
+ data.questions.forEach((q,i)=>{
+  q.text=document.getElementById("qtext")&&i===selected?
+   document.getElementById("qtext").value:q.text;
+ });
+ save();
+ let html=`<h3>${escapeHTML(data.title)}</h3>`;
+ data.questions.forEach((q,i)=>{
+  html+=`<div class="option"><b>${i+1}. ${escapeHTML(q.text)}</b>`;
+  q.options.forEach(o=>{
+   html+=`<p>${escapeHTML(o.text)}（${o.score} 分）</p>`;
+  });
+  html+="</div>";
+ });
+ document.getElementById("previewArea").innerHTML=html;
+}
+function exportData(){
+ save();
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="v3-questions.json";a.click();
+ URL.revokeObjectURL(url);
+}
+render();
+</script>
+</body>
+</html>
