@@ -44,6 +44,8 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 
 .form-title-row{display:flex;align-items:center;gap:10px;margin:12px 0 8px}.form-title-row h2{margin:0;min-width:0;overflow-wrap:anywhere}.form-title-edit{flex:0 0 auto;width:48px;height:48px;min-height:48px;padding:0;border-radius:13px;background:#171717;border:1px solid #383838;color:#aaa;font-size:23px;line-height:1}.form-title-edit:hover{border-color:#777;color:#fff}
 @media(max-width:700px){.form-title-row{gap:8px}.form-title-row h2{font-size:24px;line-height:1.45}.form-title-edit{width:44px;height:44px;min-height:44px}}
+
+.respondent-entry{display:block;text-decoration:none;color:inherit}.respondent-entry:visited{color:inherit}.respondent-entry .update-action{text-align:center}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
@@ -58,7 +60,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
   <button class="home-card" onclick="showScreen('edit')"><span class="symbol" style="color:#4b91d0">✎</span><span class="number">01</span><h3>修改題目</h3><p>編輯題目、選項及配分</p></button>
   <button class="home-card" onclick="showScreen('form');renderForm()"><span class="symbol" style="color:#36a58a">▤</span><span class="number">02</span><h3>查看表單</h3><p>預覽完整問卷內容</p></button>
   <button class="home-card" onclick="showScreen('stats');renderStats()"><span class="symbol" style="color:#a47ac8">▥</span><span class="number">03</span><h3>查看統計</h3><p>查看作答數據及分析</p></button>
-  <button class="home-card" onclick="showUpdateNotice()"><span class="symbol" style="color:#c28b43">↻</span><span class="number">04</span><h3>資料更新</h3><p>點擊查看更新提示</p><span class="update-action">資料更新</span></button>
+  <a class="home-card respondent-entry" href="../" target="_blank" rel="noopener"><span class="symbol" style="color:#c28b43">↗</span><span class="number">04</span><h3>填寫問卷</h3><p>前往新兵問卷填答頁面</p><span class="update-action">開始填寫問卷</span></a>
  </div>
  <div class="home-footer">系統管理介面・V3</div>
  <input id="surveyTitleHome" type="hidden" value="">
