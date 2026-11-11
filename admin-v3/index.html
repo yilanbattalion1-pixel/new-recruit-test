@@ -31,7 +31,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 .form-option input{width:auto;margin:0 8px 0 0}.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;gap:10px}.back{margin-bottom:12px}.status{color:var(--green);font-size:13px}
 @media(max-width:700px){main{margin:16px auto;padding:0 12px 30px}#home{padding:22px 16px 18px;border-radius:28px}.home-brand{font-size:25px}.home-en{font-size:14px}.home-divider{margin:18px 0 22px}.welcome h2{font-size:21px}.home-grid{gap:12px;margin-top:18px}.home-card{min-height:170px;padding:20px 15px;border-radius:22px}.home-card h3{font-size:18px;margin:16px 0 7px}.home-card p{font-size:13px}.home-card .number{right:12px;top:13px;padding:1px 10px;font-size:13px}.home-card .symbol{font-size:27px}.editor-layout{grid-template-columns:1fr}.panel{padding:15px}}
 
-.update-modal{display:none;position:fixed;inset:0;z-index:9999;background:#000b;align-items:center;justify-content:center;padding:22px}.update-modal.show{display:flex}.update-dialog{width:min(100%,380px);background:#101010;border:1px solid #333;border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 18px 60px #0009}.update-dialog .success-icon{font-size:42px;color:#5dbb91;line-height:1.3}.update-dialog h2{font-size:21px;margin:12px 0 8px;color:#f5f5f5}.update-dialog p{color:#aaa;margin:0 0 20px}.update-dialog button{width:100%;border-radius:12px;background:#245f9e;border-color:#245f9e;color:#fff}
+.update-modal{display:none;position:fixed;inset:0;z-index:2147483000;background:#000b;align-items:center;justify-content:center;padding:22px}.update-modal.show{display:flex}.update-dialog{width:min(100%,380px);background:#101010;border:1px solid #333;border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 18px 60px #0009}.update-dialog .success-icon{font-size:42px;color:#5dbb91;line-height:1.3}.update-dialog h2{font-size:21px;margin:12px 0 8px;color:#f5f5f5}.update-dialog p{color:#aaa;margin:0 0 20px}.update-dialog button{width:100%;border-radius:12px;background:#245f9e;border-color:#245f9e;color:#fff}
 
 .editor-intro{border-color:#36516a}.editor-intro .status{display:block;margin-top:10px}.editor-panel{min-width:0}.question-item{overflow:hidden}.question-item .toolbar{gap:6px}.question-item .toolbar button{padding:7px 10px;min-width:38px}.question-item p{overflow-wrap:anywhere}.editor-panel textarea{min-height:100px}.editor-panel .option-box{background:#0b0b0b}.editor-panel .type-tabs button{flex:1;min-height:46px}.editor-layout{grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr)}
 @media(max-width:700px){.editor-layout{grid-template-columns:1fr;gap:12px}.editor-intro .toolbar button{flex:1}.question-item .toolbar{display:flex;flex-wrap:wrap}.question-item .toolbar b{width:100%;margin-bottom:2px}.editor-panel .type-tabs{display:grid;grid-template-columns:1fr 1fr}.option-row{grid-template-columns:minmax(0,1fr) minmax(100px,.7fr)}}
@@ -150,16 +150,18 @@ function adminLogin(event){
  return false;
 }
 function openPasswordChange(){
- const modal=$("passwordModal");
+ const modal=document.getElementById("passwordModal");
+ if(!modal){alert("密碼視窗載入失敗，請重新整理頁面。");return;}
  modal.removeAttribute("inert");
- modal.style.display="flex";
  modal.classList.add("show");
- $("passwordChangeError").textContent="";
- $("oldAdminPassword").value="";
- $("newAdminPassword").value="";
- $("confirmAdminPassword").value="";
+ modal.style.cssText += ";display:flex!important;visibility:visible!important;opacity:1!important;z-index:2147483000!important";
+ document.getElementById("passwordChangeError").textContent="";
+ document.getElementById("oldAdminPassword").value="";
+ document.getElementById("newAdminPassword").value="";
+ document.getElementById("confirmAdminPassword").value="";
+ document.getElementById("oldAdminPassword").focus();
 }
-function closePasswordChange(){const modal=$("passwordModal");modal.classList.remove("show");modal.style.display="none";}
+function closePasswordChange(){const modal=document.getElementById("passwordModal");modal.classList.remove("show");modal.style.display="none";modal.style.visibility="";}
 function changeAdminPassword(){
  const oldValue=$("oldAdminPassword").value;
  const newValue=$("newAdminPassword").value;
