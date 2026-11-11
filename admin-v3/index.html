@@ -88,18 +88,10 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
   <a class="home-card respondent-entry" href="../" target="_blank" rel="noopener"><span class="symbol" style="color:#c28b43">↗</span><span class="number">04</span><h3>填寫</h3><p>進入實際問卷並填寫作答</p><span class="update-action">開始填寫</span></a>
  </div>
  <div class="home-footer">系統管理介面・V3</div>
- <details id="passwordDetails" class="password-inline" style="display:block">
-  <summary style="cursor:pointer;list-style:none;text-align:center;border:1px solid #444;background:#171717;border-radius:12px;padding:12px;color:#eee;font-weight:600">更改管理員密碼</summary>
-  <div style="padding-top:16px">
-
-  <h3>更改管理員密碼</h3>
-  <label for="inlineOldPassword">目前密碼</label><input id="inlineOldPassword" type="password" autocomplete="current-password">
-  <label for="inlineNewPassword">新密碼（至少 4 個字元）</label><input id="inlineNewPassword" type="password" minlength="4" autocomplete="new-password">
-  <label for="inlineConfirmPassword">再次輸入新密碼</label><input id="inlineConfirmPassword" type="password" minlength="4" autocomplete="new-password">
-  <div id="inlinePasswordError" class="login-error" role="alert"></div>
-  <div class="toolbar"><button class="primary" type="button" onclick="saveInlinePassword()">確認更改</button><button type="button" onclick="closeInlinePassword()">取消</button></div>
-  </div>
- </details>
+ <div class="home-footer">系統管理介面・V3</div>
+ <div class="password-tools" style="text-align:center;margin:18px auto 0">
+  <button type="button" onclick="changePasswordWithPrompts()">更改管理員密碼</button>
+ </div>
  <input id="surveyTitleHome" type="hidden" value="">
 </section>
 
@@ -163,28 +155,18 @@ function adminLogin(event){
  }
  return false;
 }
-function openPasswordChange(){
- const panel=document.getElementById("passwordDetails");
- panel.open=true;
- document.getElementById("inlinePasswordError").textContent="";
- document.getElementById("inlineOldPassword").value="";
- document.getElementById("inlineNewPassword").value="";
- document.getElementById("inlineConfirmPassword").value="";
- panel.scrollIntoView({behavior:"smooth",block:"center"});
- document.getElementById("inlineOldPassword").focus();
-}
-function closeInlinePassword(){document.getElementById("passwordDetails").open=false;}
-function saveInlinePassword(){
- const oldValue=document.getElementById("inlineOldPassword").value;
- const newValue=document.getElementById("inlineNewPassword").value;
- const confirmValue=document.getElementById("inlineConfirmPassword").value;
- const error=document.getElementById("inlinePasswordError");
- if(oldValue!==getAdminPassword()){error.textContent="目前密碼不正確。";return;}
- if(newValue.length<4){error.textContent="新密碼至少需要 4 個字元。";return;}
- if(newValue!==confirmValue){error.textContent="兩次輸入的新密碼不一致。";return;}
+function changePasswordWithPrompts(){
+ const oldValue=window.prompt("請輸入目前管理員密碼：");
+ if(oldValue===null)return;
+ if(oldValue!==getAdminPassword()){window.alert("目前密碼不正確。");return;}
+ const newValue=window.prompt("請輸入新管理員密碼（至少 4 個字元）：");
+ if(newValue===null)return;
+ if(newValue.length<4){window.alert("新密碼至少需要 4 個字元。");return;}
+ const confirmValue=window.prompt("請再次輸入新密碼確認：");
+ if(confirmValue===null)return;
+ if(newValue!==confirmValue){window.alert("兩次輸入的新密碼不一致。");return;}
  localStorage.setItem(ADMIN_PASSWORD_KEY,newValue);
- closeInlinePassword();
- alert("管理員密碼已更改。請記住新密碼。");
+ window.alert("管理員密碼已成功更改。下次登入請使用新密碼。");
 }
 function closePasswordChange(){const modal=document.getElementById("passwordModal");modal.classList.remove("show");modal.style.display="none";modal.style.visibility="";}
 function changeAdminPassword(){
