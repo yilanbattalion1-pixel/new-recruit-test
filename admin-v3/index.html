@@ -41,6 +41,9 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 
 .home-title-row{display:flex;align-items:center;gap:8px}.home-title-row .home-brand{min-width:0}.title-edit-btn{flex:0 0 auto;padding:5px 10px;min-height:36px;border-radius:10px;background:#171717;border:1px solid #333;color:#aaa;font-size:18px}.admin-title-editor{margin:10px 0 4px;padding:12px;border:1px solid #333;border-radius:14px;background:#101010}.admin-title-editor[hidden]{display:none}.admin-title-editor input{margin:0 0 10px}
 @media(max-width:700px){.home-title-row{align-items:flex-start}.home-title-row .home-brand{font-size:23px;line-height:1.4}.title-edit-btn{margin-top:2px}}
+
+.form-title-row{display:flex;align-items:center;gap:10px;margin:12px 0 8px}.form-title-row h2{margin:0;min-width:0;overflow-wrap:anywhere}.form-title-edit{flex:0 0 auto;width:48px;height:48px;min-height:48px;padding:0;border-radius:13px;background:#171717;border:1px solid #383838;color:#aaa;font-size:23px;line-height:1}.form-title-edit:hover{border-color:#777;color:#fff}
+@media(max-width:700px){.form-title-row{gap:8px}.form-title-row h2{font-size:24px;line-height:1.45}.form-title-edit{width:44px;height:44px;min-height:44px}}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
@@ -82,7 +85,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 </section>
 <section id="form" class="screen">
  <button class="back soft" onclick="showScreen('home')">← 回首頁</button>
- <div class="panel"><div class="section-title"><div class="muted">問卷預覽｜填答者視角</div><button class="soft" type="button" onclick="toggleFormTitleEditor()">✎ 編輯問卷標題</button></div><h2 id="formTitle"></h2><div id="formTitleEditor" class="admin-title-editor" hidden><label for="formTitleInput">問卷標題</label><input id="formTitleInput" maxlength="80" placeholder="輸入填答者看到的問卷標題"><div class="toolbar"><button class="primary" type="button" onclick="saveFormTitle()">儲存問卷標題</button><button type="button" onclick="toggleFormTitleEditor(false)">取消</button></div></div><p class="muted">以下僅供版面預覽，尚不會送出或儲存作答資料。</p><div id="formBody"></div></div>
+ <div class="panel"><div class="muted">問卷預覽｜填答者視角</div><div class="form-title-row"><h2 id="formTitle"></h2><button class="form-title-edit" type="button" onclick="toggleFormTitleEditor()" aria-label="編輯問卷標題" title="編輯問卷標題">✎</button></div><div id="formTitleEditor" class="admin-title-editor" hidden><label for="formTitleInput">問卷標題</label><input id="formTitleInput" maxlength="80" placeholder="輸入填答者看到的問卷標題"><div class="toolbar"><button class="primary" type="button" onclick="saveFormTitle()">儲存問卷標題</button><button type="button" onclick="toggleFormTitleEditor(false)">取消</button></div></div><p class="muted">以下僅供版面預覽，尚不會送出或儲存作答資料。</p><div id="formBody"></div></div>
 </section>
 </main>
 <div id="updateModal" class="update-modal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle" onclick="if(event.target===this)closeUpdateNotice()"><div class="update-dialog"><div class="success-icon">✓</div><h2 id="updateModalTitle">資料更新</h2><p>資料更新已完成！</p><button type="button" onclick="closeUpdateNotice()">我知道了</button></div></div>
