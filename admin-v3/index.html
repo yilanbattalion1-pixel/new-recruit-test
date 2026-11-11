@@ -145,7 +145,7 @@ function adminLogin(event){
   sessionStorage.setItem("recruit_v3_admin_logged_in","1");
   $("loginGate").style.display="none";
   document.body.style.overflow="";
-  document.querySelectorAll("main,.update-modal").forEach(el=>el.removeAttribute("inert"));
+  document.querySelectorAll("[inert]").forEach(el=>el.removeAttribute("inert"));
   $("loginError").textContent="";
   $("adminLoginPassword").value="";
  }else{
@@ -250,5 +250,5 @@ function toggleFormTitleEditor(show){const box=$("formTitleEditor");box.hidden=s
 function saveFormTitle(){const value=$("formTitleInput").value.trim();if(!value){alert("請輸入問卷標題");$("formTitleInput").focus();return;}data.title=value;if(!saveLocal("問卷標題已更新"))return;$("formTitle").textContent=value;$("formTitleEditor").hidden=true;const homeInput=$("surveyTitleInput");if(homeInput)homeInput.value=value;}
 function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常不同意")+'</span><span>5｜'+esc(q.maxLabel||"非常同意")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else if(q.type==="fill"){h+='<textarea placeholder="'+esc(q.placeholder||"請輸入您的答案")+'"></textarea>';}else{(q.options||[]).slice(0,4).forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
 function exportData(){if(!collectEditor())return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);saveLocal("匯出前已儲存");}
-$("surveyTitleHome").value=data.title||"";document.body.style.overflow="hidden";$("home").setAttribute("inert","");document.querySelectorAll("main,.update-modal").forEach(el=>el.setAttribute("inert",""));renderAdminTitle();renderEditorScreen();
+$("surveyTitleHome").value=data.title||"";document.body.style.overflow="hidden";renderAdminTitle();renderEditorScreen();
 </script></body></html>
