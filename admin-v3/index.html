@@ -150,13 +150,16 @@ function adminLogin(event){
  return false;
 }
 function openPasswordChange(){
- $("passwordModal").classList.add("show");
+ const modal=$("passwordModal");
+ modal.removeAttribute("inert");
+ modal.style.display="flex";
+ modal.classList.add("show");
  $("passwordChangeError").textContent="";
  $("oldAdminPassword").value="";
  $("newAdminPassword").value="";
  $("confirmAdminPassword").value="";
 }
-function closePasswordChange(){$("passwordModal").classList.remove("show");}
+function closePasswordChange(){const modal=$("passwordModal");modal.classList.remove("show");modal.style.display="none";}
 function changeAdminPassword(){
  const oldValue=$("oldAdminPassword").value;
  const newValue=$("newAdminPassword").value;
