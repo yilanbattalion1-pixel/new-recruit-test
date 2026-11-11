@@ -35,6 +35,9 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 
 .editor-intro{border-color:#36516a}.editor-intro .status{display:block;margin-top:10px}.editor-panel{min-width:0}.question-item{overflow:hidden}.question-item .toolbar{gap:6px}.question-item .toolbar button{padding:7px 10px;min-width:38px}.question-item p{overflow-wrap:anywhere}.editor-panel textarea{min-height:100px}.editor-panel .option-box{background:#0b0b0b}.editor-panel .type-tabs button{flex:1;min-height:46px}.editor-layout{grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr)}
 @media(max-width:700px){.editor-layout{grid-template-columns:1fr;gap:12px}.editor-intro .toolbar button{flex:1}.question-item .toolbar{display:flex;flex-wrap:wrap}.question-item .toolbar b{width:100%;margin-bottom:2px}.editor-panel .type-tabs{display:grid;grid-template-columns:1fr 1fr}.option-row{grid-template-columns:minmax(0,1fr) minmax(100px,.7fr)}}
+
+.type-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.type-picker button{min-height:52px}.editor-intro .status{background:#101a24;border:1px solid #284967;border-radius:10px;padding:9px 12px}.editor-panel .option-box{padding:12px}.editor-panel input,.editor-panel textarea{font-size:16px}
+@media(max-width:700px){.type-picker{grid-template-columns:repeat(3,minmax(0,1fr))}.type-picker button{padding:8px 5px;font-size:14px}.editor-layout{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
@@ -84,27 +87,53 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 const KEY="recruit_v3_draft";
 const DEFAULT_DATA={title:"義務役新兵生存適應力測驗",questions:[{id:"q1",type:"choice",text:"如果遇到不熟悉的營區規定，你會怎麼做？",options:[{id:"a",text:"先觀察別人",score:15},{id:"b",text:"詢問同梯",score:45},{id:"c",text:"詢問幹部",score:75},{id:"d",text:"先確認規定",score:90}]},{id:"q2",type:"scale",text:"你對自己適應軍中生活的意願有多高？",minLabel:"完全沒有意願",maxLabel:"非常有意願"}]};
 function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&Array.isArray(d.questions)){d.questions.forEach(q=>{if(!q.type)q.type="choice";});return d;}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA));}
-let data=loadData(),selected=0;
+let data=loadData(),selected=-1,draftQuestion=null;
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");if(id==="edit")renderEditorScreen();if(id==="home")$("surveyTitleHome").value=data.title||"";}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");if(id==="edit"){selected=-1;draftQuestion=null;renderEditorScreen();addQuestion();}if(id==="home")$("surveyTitleHome").value=data.title||"";}
 function saveLocal(msg){try{localStorage.setItem(KEY,JSON.stringify(data));$("editStatus").textContent=msg||"已儲存到本機";return true;}catch(e){$("editStatus").textContent="儲存失敗";return false;}}
 function saveTitle(){data.title=$("surveyTitleHome").value.trim()||"義務役新兵生存適應力測驗";localStorage.setItem(KEY,JSON.stringify(data));$("homeStatus").textContent="問卷名稱已儲存";}
-function collectEditor(){const q=data.questions[selected];if(!q||!$("qtext"))return true;const t=$("qtext").value.trim();if(!t){alert("請輸入題目內容");$("qtext").focus();return false;}q.text=t;if(q.type==="choice"){const opts=[];for(let i=0;i<q.options.length;i++){const txt=$("opt"+i).value.trim(),sc=$("score"+i).value;if(!txt){alert("請填寫第 "+(i+1)+" 個選項");return false;}if(sc===""||!Number.isFinite(Number(sc))){alert("請輸入有效分數");return false;}opts.push({...q.options[i],text:txt,score:Number(sc)});}q.options=opts;}else{q.minLabel=$("minLabel").value.trim()||"非常低";q.maxLabel=$("maxLabel").value.trim()||"非常高";}return true;}
+function collectEditor(){
+ const q=draftQuestion||(selected>=0?data.questions[selected]:null);
+ if(!q||!$("qtext"))return true;
+ const t=$("qtext").value.trim();
+ if(!t){alert("請先輸入題目內容");$("qtext").focus();return false;}
+ q.text=t;
+ if(q.type==="choice"){
+  q.options=[0,1,2,3].map(i=>{const el=$("opt"+i),sc=$("score"+i);return {...(q.options[i]||{id:q.id+"_o"+i}),text:el?el.value.trim():"",score:sc&&sc.value!==""?Number(sc.value):0};});
+  for(let i=0;i<4;i++){if(!q.options[i].text){alert("請填寫第 "+(i+1)+" 個選項");$("opt"+i).focus();return false;}if(!Number.isFinite(q.options[i].score)){alert("請輸入有效分數");return false;}}
+ }else if(q.type==="fill"){
+  q.placeholder=$("fillPlaceholder")?$("fillPlaceholder").value.trim():"請輸入您的答案";
+ }else{
+  q.minLabel=$("minLabel").value.trim()||"非常不同意";
+  q.maxLabel=$("maxLabel").value.trim()||"非常同意";
+ }
+ return true;
+}
 function renderEditorScreen(){ $("questionCount").textContent=data.questions.length+" 題";$("questionList").innerHTML=data.questions.map((q,i)=>'<div class="question-item '+(i===selected?"selected":"")+'"><div class="toolbar"><b>第 '+(i+1)+' 題</b><button class="soft" onclick="selectQ('+i+')">編輯</button><button onclick="moveQ('+i+',-1)" '+(i===0?"disabled":"")+' aria-label="上移">↑</button><button onclick="moveQ('+i+',1)" '+(i===data.questions.length-1?"disabled":"")+' aria-label="下移">↓</button><button class="danger" onclick="deleteQ('+i+')">刪除</button></div><p>'+esc(q.text||"（尚未填寫）")+'</p><span class="count">'+(q.type==="scale"?"1～5 意願量表":"一般選項題")+'</span></div>').join("");renderEditor();}
-function renderEditor(){const q=data.questions[selected];if(!q){$("editor").innerHTML="目前沒有題目，請新增。";return;}let h='<label>題目內容</label><textarea id="qtext" maxlength="300" placeholder="請輸入問題">'+esc(q.text)+'</textarea><label>題目類型</label><div class="type-tabs"><button class="'+(q.type==="choice"?"active":"")+'" onclick="changeType(&quot;choice&quot;)">一般選項題</button><button class="'+(q.type==="scale"?"active":"")+'" onclick="changeType(&quot;scale&quot;)">1～5 意願量表</button></div>';
-if(q.type==="choice"){h+='<p class="muted">受測者從選項中選擇一個答案，每個選項可設定分數。</p>';q.options.forEach((o,i)=>{h+='<div class="option-box"><b>選項 '+(i+1)+'</b><label>選項文字</label><input id="opt'+i+'" value="'+esc(o.text)+'" placeholder="輸入選項"><div class="option-row"><div><label>計分</label><input id="score'+i+'" type="number" value="'+esc(o.score)+'"></div><div><label>順序</label><div class="toolbar"><button onclick="moveOpt('+i+',-1)" '+(i===0?"disabled":"")+'>↑</button><button onclick="moveOpt('+i+',1)" '+(i===q.options.length-1?"disabled":"")+'>↓</button></div></div></div><button class="danger" onclick="deleteOpt('+i+')" '+(q.options.length<=2?"disabled":"")+'>刪除此選項</button></div>';});h+='<button class="soft" onclick="addOpt()" '+(q.options.length>=10?"disabled":"")+'>＋ 增加選項</button>';}
-else{h+='<p class="muted">受測者以 1 到 5 分表達意願程度。</p><label>1 分代表</label><input id="minLabel" maxlength="40" value="'+esc(q.minLabel||"完全沒有意願")+'"><label>5 分代表</label><input id="maxLabel" maxlength="40" value="'+esc(q.maxLabel||"非常有意願")+'"><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<div class="scale-choice"><b>'+n+'</b><span class="muted">分</span></div>').join("")+'</div>';}
-h+='<div class="toolbar"><button class="primary" onclick="saveAll()">儲存本題</button></div>';$("editor").innerHTML=h;}
-function selectQ(i){if(!collectEditor())return;selected=i;saveLocal("已儲存");renderEditorScreen();}
-function addQuestion(){if(!collectEditor())return;const id="q"+Date.now();data.questions.push({id,type:"choice",text:"",options:[{id:id+"_1",text:"選項 1",score:0},{id:id+"_2",text:"選項 2",score:0}]});selected=data.questions.length-1;saveLocal("已新增題目");renderEditorScreen();}
-function deleteQ(i){if(!confirm("確定刪除第 "+(i+1)+" 題？"))return;if(i!==selected&&!collectEditor())return;data.questions.splice(i,1);selected=Math.max(0,Math.min(selected,data.questions.length-1));saveLocal("題目已刪除");renderEditorScreen();}
+function renderEditor(){
+ const q=draftQuestion||(selected>=0?data.questions[selected]:null);
+ if(!q){$("editor").innerHTML='<p class="muted">請按「新增題目」開始建立。</p>';return;}
+ let h='<label>題目內容</label><textarea id="qtext" maxlength="300" placeholder="例如：你對軍中生活的適應程度如何？">'+esc(q.text||"")+'</textarea><label>題目類型</label><div class="type-tabs type-picker"><button class="'+(q.type==="choice"?"active":"")+'" onclick="changeType(\'choice\')">選擇題</button><button class="'+(q.type==="fill"?"active":"")+'" onclick="changeType(\'fill\')">填空題</button><button class="'+(q.type==="scale"?"active":"")+'" onclick="changeType(\'scale\')">評分題</button></div>';
+ if(q.type==="choice"){
+  h+='<p class="muted">答題者從以下 4 個選項中選擇一個答案。</p>';
+  for(let i=0;i<4;i++){const o=q.options[i]||{text:"",score:0};h+='<div class="option-box"><b>選項 '+(i+1)+'</b><label>選項內容</label><input id="opt'+i+'" maxlength="120" value="'+esc(o.text)+'" placeholder="輸入第 '+(i+1)+' 個選項"><label>分數</label><input id="score'+i+'" type="number" value="'+esc(o.score??0)+'" placeholder="輸入分數"></div>';}
+ }else if(q.type==="fill"){
+  h+='<p class="muted">答題者會看到文字輸入欄位，自行輸入答案。</p><label>輸入提示（選填）</label><input id="fillPlaceholder" maxlength="80" value="'+esc(q.placeholder||"請輸入您的答案")+'" placeholder="例如：請簡述原因"><div class="option-box"><label>答題者填寫預覽</label><textarea disabled placeholder="'+esc(q.placeholder||"請輸入您的答案")+'"></textarea></div>';
+ }else{
+  h+='<p class="muted">答題者以 1～5 分選擇，1 分最低，5 分最高。</p><label>1 分代表</label><input id="minLabel" maxlength="40" value="'+esc(q.minLabel||"非常不同意")+'"><label>5 分代表</label><input id="maxLabel" maxlength="40" value="'+esc(q.maxLabel||"非常同意")+'"><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<div class="scale-choice"><b>'+n+'</b><span class="muted">分</span></div>').join("")+'</div>';
+ }
+ h+='<div class="toolbar"><button class="primary" onclick="saveAll()">'+(draftQuestion?"新增此題":"儲存本題")+'</button>'+(draftQuestion?'<button onclick="cancelDraft()">取消</button>':'')+'</div>';
+ $("editor").innerHTML=h;
+}
+function selectQ(i){if(!collectEditor())return;if(draftQuestion){if(draftQuestion.text.trim()||draftQuestion.type!=="choice"){if(!confirm("目前新增題目尚未儲存，確定放棄並切換嗎？"))return;}}draftQuestion=null;selected=i;saveLocal("已切換題目");renderEditorScreen();}
+function addQuestion(){const id="q"+Date.now();selected=-1;draftQuestion={id,type:"choice",text:"",options:[0,1,2,3].map(i=>({id:id+"_o"+i,text:"",score:0}))};renderEditorScreen();}
+function cancelDraft(){draftQuestion=null;selected=data.questions.length?0:-1;renderEditorScreen();}
+function deleteQ(i){if(!confirm("確定刪除第 "+(i+1)+" 題？"))return;data.questions.splice(i,1);selected=data.questions.length?Math.min(i,data.questions.length-1):-1;saveLocal("題目已刪除");renderEditorScreen();}
 function moveQ(i,d){if(!collectEditor())return;let n=i+d;if(n<0||n>=data.questions.length)return;[data.questions[i],data.questions[n]]=[data.questions[n],data.questions[i]];selected=n;saveLocal("順序已更新");renderEditorScreen();}
-function changeType(type){if(!collectEditor())return;const q=data.questions[selected];if(q.type===type)return;if(type==="scale"){q.type="scale";q.minLabel="完全沒有意願";q.maxLabel="非常有意願";}else{q.type="choice";q.options=[{id:q.id+"_1",text:"選項 1",score:1},{id:q.id+"_2",text:"選項 2",score:2}];}saveLocal("題型已變更");renderEditor();}
-function addOpt(){if(!collectEditor())return;const q=data.questions[selected];if(q.options.length>=10)return;q.options.push({id:q.id+"_o"+Date.now(),text:"新選項",score:0});saveLocal("已新增選項");renderEditor();}
-function deleteOpt(i){const q=data.questions[selected];if(q.options.length<=2||!collectEditor())return;q.options.splice(i,1);saveLocal("選項已刪除");renderEditor();}
-function moveOpt(i,d){if(!collectEditor())return;const q=data.questions[selected],n=i+d;if(n<0||n>=q.options.length)return;[q.options[i],q.options[n]]=[q.options[n],q.options[i]];saveLocal("選項順序已更新");renderEditor();}
-function saveAll(){if(!collectEditor())return;saveLocal("所有變更已儲存");renderEditorScreen();}
+function changeType(type){const q=draftQuestion||(selected>=0?data.questions[selected]:null);if(!q||q.type===type)return;if(!collectEditor())return;q.type=type;if(type==="choice"){q.options=[0,1,2,3].map(i=>({id:q.id+"_o"+i,text:"",score:0}));}else if(type==="scale"){q.minLabel="非常不同意";q.maxLabel="非常同意";delete q.options;}else{q.placeholder="請輸入您的答案";delete q.options;}renderEditor();}
+function saveAll(){if(!collectEditor())return;if(draftQuestion){data.questions.push(draftQuestion);selected=data.questions.length-1;draftQuestion=null;saveLocal("新題目已新增並儲存");renderEditorScreen();addQuestion();}else{saveLocal("本題及全部變更已儲存");renderEditorScreen();}}
+function addOpt(){return;}function deleteOpt(){return;}function moveOpt(){return;}
 function renderStats(){
  $("statsBody").innerHTML='<div class="option-box"><h3>尚未連接作答資料庫</h3><p class="muted">目前尚未串接 Google Sheets 的 Responses 工作表，因此不會顯示虛構的作答數字。</p></div><div class="option-box"><b>整體概況</b><p class="muted">有效作答總數、完成率、提交時間分布。</p></div><div class="option-box"><b>個人背景分布</b><p class="muted">家庭結構、家庭月收入、個人負債、最高學歷、正式工作經驗。</p></div><div class="option-box"><b>題目與量表分析</b><p class="muted">各選項人數與比例、1～5 分分布及平均分數。</p></div><div class="option-box"><b>交叉分析</b><p class="muted">依家庭背景、學歷或收入區間比較測驗分數。</p></div><p class="muted">完成登入驗證與 Responses 資料串接後，這裡才會呈現真實統計。</p>';
 }
@@ -116,7 +145,7 @@ function closeUpdateNotice(){
  const modal=document.getElementById("updateModal");
  if(modal){modal.classList.remove("show");document.body.style.overflow="";}
 }
-function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常低")+'</span><span>5｜'+esc(q.maxLabel||"非常高")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else{q.options.forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
+function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常不同意")+'</span><span>5｜'+esc(q.maxLabel||"非常同意")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else if(q.type==="fill"){h+='<textarea placeholder="'+esc(q.placeholder||"請輸入您的答案")+'"></textarea>';}else{(q.options||[]).slice(0,4).forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
 function exportData(){if(!collectEditor())return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);saveLocal("匯出前已儲存");}
 $("surveyTitleHome").value=data.title||"";renderEditorScreen();
 </script></body></html>
