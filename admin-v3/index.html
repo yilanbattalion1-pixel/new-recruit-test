@@ -4,39 +4,49 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f6f8"><title>義務役新兵問卷｜管理後台</title>
 <style>
-:root{color-scheme:light;--bg:#f4f6f8;--paper:#fff;--ink:#202a36;--muted:#718096;--line:#e1e7ee;--blue:#245f9e;--bluebg:#eaf2fb;--red:#a33d49;--green:#28765d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Noto Sans TC",sans-serif}
-header{background:#fff;border-bottom:1px solid var(--line)}.head{max-width:1040px;margin:auto;padding:22px 20px}.brand{font-size:13px;color:var(--muted);letter-spacing:.08em}.head h1{font-size:24px;margin:3px 0}.head p{margin:0;color:var(--muted);font-size:13px}
-main{max-width:1040px;margin:26px auto;padding:0 18px 48px}.screen{display:none}.screen.active{display:block}.welcome{text-align:center;padding:36px 12px 20px}.welcome h2{font-size:26px;margin:0 0 8px}.welcome p{color:var(--muted);margin:0}
-.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:760px;margin:28px auto}
-.home-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 22px;text-align:left;cursor:pointer;min-height:190px;transition:.15s}
-.home-card:hover{border-color:#8eafd2;transform:translateY(-2px);box-shadow:0 8px 24px #20304012}.home-card .symbol{font-size:30px}.home-card h3{font-size:20px;margin:12px 0 5px}.home-card p{font-size:14px;color:var(--muted);margin:0}
+:root{color-scheme:dark;--bg:#050505;--paper:#080808;--ink:#f5f5f5;--muted:#a3a3a3;--line:#242424;--blue:#4b91d0;--bluebg:#142536;--red:#e06b75;--green:#5dbb91}
+*{box-sizing:border-box}body{margin:0;background:#000;color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Noto Sans TC",sans-serif}
+header{display:none}.head{max-width:1040px;margin:auto;padding:22px 20px}.brand{font-size:13px;color:var(--muted);letter-spacing:.08em}.head h1{font-size:24px;margin:3px 0}.head p{margin:0;color:var(--muted);font-size:13px}
+main{max-width:1040px;margin:30px auto;padding:0 18px 48px}.screen{display:none}.screen.active{display:block}
+#home{max-width:900px;margin:0 auto;border:1px solid #292929;border-radius:34px;padding:30px 28px 22px;background:#050505}
+.home-brand{margin:0 0 5px;font-size:30px;line-height:1.35;font-weight:800;letter-spacing:.01em}.home-en{color:#aaa;font-size:16px;letter-spacing:.02em}.home-divider{height:1px;background:#222;margin:22px 0 26px}
+.welcome{text-align:left;padding:0 0 6px}.welcome h2{font-size:23px;margin:0 0 12px}.welcome p{color:var(--muted);margin:0;font-size:16px}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:none;margin:20px 0 16px}
+.home-card{position:relative;display:block;width:100%;background:#050505;border:1px solid #292929;border-radius:25px;padding:24px 22px;text-align:left;cursor:pointer;min-height:190px;color:#f5f5f5;transition:border-color .15s}
+.home-card:hover{border-color:#555;transform:translateY(-1px);box-shadow:none}.home-card .symbol{font-size:30px;line-height:1.2}.home-card h3{font-size:21px;margin:20px 0 8px;color:#f5f5f5}.home-card p{font-size:15px;color:#aaa;margin:0}
+.home-card .number{position:absolute;right:18px;top:18px;background:#242424;color:#ddd;border-radius:30px;padding:2px 12px;font-weight:700;font-size:14px}
+.home-card .update-action{display:block;margin-top:12px;width:100%;border:1px solid #444;background:transparent;color:#aaa;border-radius:28px;padding:9px 12px;min-height:42px}
+.home-footer{text-align:center;color:#888;font-size:14px;margin-top:12px}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-weight:600;padding:10px 15px;min-height:42px;cursor:pointer}
-button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button.soft{background:var(--bluebg);color:var(--blue);border-color:#d4e3f3}button.danger{color:var(--red)}button:disabled{opacity:.4;cursor:not-allowed}
-input,textarea,select{width:100%;border:1px solid #cbd5df;border-radius:9px;padding:12px;background:#fff;color:var(--ink);font:inherit;margin:5px 0 13px}textarea{min-height:95px;resize:vertical}label{display:block;font-weight:650;margin-top:10px}
-.muted{color:var(--muted);font-size:13px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.count{font-size:13px;color:var(--muted);background:#f0f3f6;padding:4px 10px;border-radius:99px}
+button{border:1px solid #3a3a3a;border-radius:10px;background:#171717;color:#eee;font:inherit;font-weight:600;padding:10px 15px;min-height:42px;cursor:pointer}
+button.primary{background:#245f9e;color:#fff;border-color:#245f9e}button.soft{background:#142536;color:#9bc5ec;border-color:#284967}button.danger{color:#f08b94}button:disabled{opacity:.4;cursor:not-allowed}
+input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding:12px;background:#111;color:#f5f5f5;font:inherit;margin:5px 0 13px}textarea{min-height:95px;resize:vertical}label{display:block;font-weight:650;margin-top:10px}
+.muted{color:var(--muted);font-size:13px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.count{font-size:13px;color:#bbb;background:#242424;padding:4px 10px;border-radius:99px}
 .editor-layout{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,1.4fr);gap:16px;align-items:start}
-.question-item{padding:13px;border:1px solid var(--line);border-radius:12px;margin:9px 0;background:#fff}.question-item.selected{border:2px solid #78a5d1;background:#f4f8fc}.question-item p{margin:8px 0;overflow-wrap:anywhere}
-.option-box{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;background:#fafbfd}.option-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px}.option-row input{margin-bottom:3px}
-.type-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}.type-tabs button.active{background:var(--bluebg);border-color:#a9c6e3;color:var(--blue)}
-.scale-preview{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.scale-choice{flex:1;min-width:45px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px 4px;background:#fff}.scale-choice b{display:block;font-size:18px}
-.form-question{padding:17px 0;border-bottom:1px solid var(--line)}.form-question:last-child{border:0}.form-question h3{font-size:17px;margin:0 0 12px}.form-option{display:block;border:1px solid var(--line);border-radius:10px;padding:11px;margin:8px 0;font-weight:400}.form-option input{width:auto;margin:0 8px 0 0}
-.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;gap:10px}.back{margin-bottom:12px}.status{color:var(--green);font-size:13px}
-@media(max-width:700px){.home-grid{grid-template-columns:1fr;gap:12px}.home-card{min-height:140px;padding:20px}.editor-layout{grid-template-columns:1fr}.head{padding:18px}.welcome{padding-top:24px}.panel{padding:15px}}
+.question-item{padding:13px;border:1px solid #333;border-radius:12px;margin:9px 0;background:#0c0c0c}.question-item.selected{border:2px solid #477eac;background:#101a24}.question-item p{margin:8px 0;overflow-wrap:anywhere}
+.option-box{border:1px solid #333;border-radius:12px;padding:13px;margin:10px 0;background:#101010}.option-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px}.option-row input{margin-bottom:3px}
+.type-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}.type-tabs button.active{background:#142536;border-color:#315b7d;color:#9bc5ec}
+.scale-preview{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.scale-choice{flex:1;min-width:45px;text-align:center;border:1px solid #333;border-radius:10px;padding:10px 4px;background:#111;color:#eee}.scale-choice b{display:block;font-size:18px}
+.form-question{padding:17px 0;border-bottom:1px solid #333}.form-question:last-child{border:0}.form-question h3{font-size:17px;margin:0 0 12px}.form-option{display:block;border:1px solid #333;border-radius:10px;padding:11px;margin:8px 0;font-weight:400}
+.form-option input{width:auto;margin:0 8px 0 0}.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;gap:10px}.back{margin-bottom:12px}.status{color:var(--green);font-size:13px}
+@media(max-width:700px){main{margin:16px auto;padding:0 12px 30px}#home{padding:22px 16px 18px;border-radius:28px}.home-brand{font-size:25px}.home-en{font-size:14px}.home-divider{margin:18px 0 22px}.welcome h2{font-size:21px}.home-grid{gap:12px;margin-top:18px}.home-card{min-height:170px;padding:20px 15px;border-radius:22px}.home-card h3{font-size:18px;margin:16px 0 7px}.home-card p{font-size:13px}.home-card .number{right:12px;top:13px;padding:1px 10px;font-size:13px}.home-card .symbol{font-size:27px}.editor-layout{grid-template-columns:1fr}.panel{padding:15px}}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
 <main>
 <section id="home" class="screen active">
- <div class="welcome"><h2>今天要處理什麼？</h2><p>選擇要編輯題目，或先用填答者角度檢查整份表單。</p></div>
+ <div class="home-brand">義務役新兵問卷管理後台</div>
+ <div class="home-en">QUESTIONNAIRE ADMINISTRATION</div>
+ <div class="home-divider"></div>
+ <div class="welcome"><h2>今天要處理什麼？</h2><p>請選擇下方功能</p></div>
  <div class="home-grid">
-  <button class="home-card" onclick="showScreen('edit')"><div class="symbol">✎</div><h3>1. 修改題目</h3><p>新增、刪除、排序題目，編輯選項與分數，也能設定 1～5 意願量表。</p></button>
-  <button class="home-card" onclick="showScreen('form');renderForm()"><div class="symbol">▤</div><h3>2. 查看表單</h3><p>以填答者看到的方式，預覽整份問卷與不同題型。</p></button>
-  <button class="home-card" onclick="showScreen('stats');renderStats()"><div class="symbol">▥</div><h3>3. 查看統計</h3><p>作答分析、分數分布與交叉統計。</p></button>
-  <button class="home-card" onclick="showUpdateNotice()"><div class="symbol">↻</div><h3>4. 資料更新</h3><p>點擊查看資料更新狀態。</p></button>
+  <button class="home-card" onclick="showScreen('edit')"><span class="symbol" style="color:#4b91d0">✎</span><span class="number">01</span><h3>修改題目</h3><p>編輯題目、選項及配分</p></button>
+  <button class="home-card" onclick="showScreen('form');renderForm()"><span class="symbol" style="color:#36a58a">▤</span><span class="number">02</span><h3>查看表單</h3><p>預覽完整問卷內容</p></button>
+  <button class="home-card" onclick="showScreen('stats');renderStats()"><span class="symbol" style="color:#a47ac8">▥</span><span class="number">03</span><h3>查看統計</h3><p>查看作答數據及分析</p></button>
+  <button class="home-card" onclick="showUpdateNotice()"><span class="symbol" style="color:#c28b43">↻</span><span class="number">04</span><h3>資料更新</h3><p>點擊查看更新提示</p><span class="update-action">資料更新</span></button>
  </div>
- <div class="panel"><label for="surveyTitleHome">問卷名稱</label><input id="surveyTitleHome" maxlength="80"><div class="toolbar"><button class="primary" onclick="saveTitle()">儲存問卷名稱</button><span id="homeStatus" class="status"></span></div></div>
+ <div class="home-footer">系統管理介面・V3</div>
+ <input id="surveyTitleHome" type="hidden" value="">
 </section>
 
 <section id="edit" class="screen">
