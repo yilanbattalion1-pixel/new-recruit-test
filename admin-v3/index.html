@@ -30,6 +30,8 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 .form-question{padding:17px 0;border-bottom:1px solid #333}.form-question:last-child{border:0}.form-question h3{font-size:17px;margin:0 0 12px}.form-option{display:block;border:1px solid #333;border-radius:10px;padding:11px;margin:8px 0;font-weight:400}
 .form-option input{width:auto;margin:0 8px 0 0}.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;gap:10px}.back{margin-bottom:12px}.status{color:var(--green);font-size:13px}
 @media(max-width:700px){main{margin:16px auto;padding:0 12px 30px}#home{padding:22px 16px 18px;border-radius:28px}.home-brand{font-size:25px}.home-en{font-size:14px}.home-divider{margin:18px 0 22px}.welcome h2{font-size:21px}.home-grid{gap:12px;margin-top:18px}.home-card{min-height:170px;padding:20px 15px;border-radius:22px}.home-card h3{font-size:18px;margin:16px 0 7px}.home-card p{font-size:13px}.home-card .number{right:12px;top:13px;padding:1px 10px;font-size:13px}.home-card .symbol{font-size:27px}.editor-layout{grid-template-columns:1fr}.panel{padding:15px}}
+
+.update-modal{display:none;position:fixed;inset:0;z-index:9999;background:#000b;align-items:center;justify-content:center;padding:22px}.update-modal.show{display:flex}.update-dialog{width:min(100%,380px);background:#101010;border:1px solid #333;border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 18px 60px #0009}.update-dialog .success-icon{font-size:42px;color:#5dbb91;line-height:1.3}.update-dialog h2{font-size:21px;margin:12px 0 8px;color:#f5f5f5}.update-dialog p{color:#aaa;margin:0 0 20px}.update-dialog button{width:100%;border-radius:12px;background:#245f9e;border-color:#245f9e;color:#fff}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
@@ -68,6 +70,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
  <div class="panel"><div class="muted">問卷預覽｜填答者視角</div><h2 id="formTitle"></h2><p class="muted">以下僅供版面預覽，尚不會送出或儲存作答資料。</p><div id="formBody"></div></div>
 </section>
 </main>
+<div id="updateModal" class="update-modal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle" onclick="if(event.target===this)closeUpdateNotice()"><div class="update-dialog"><div class="success-icon">✓</div><h2 id="updateModalTitle">資料更新</h2><p>資料更新已完成！</p><button type="button" onclick="closeUpdateNotice()">我知道了</button></div></div>
 <script>
 "use strict";
 const KEY="recruit_v3_draft";
@@ -98,7 +101,12 @@ function renderStats(){
  $("statsBody").innerHTML='<div class="option-box"><h3>尚未連接作答資料庫</h3><p class="muted">目前尚未串接 Google Sheets 的 Responses 工作表，因此不會顯示虛構的作答數字。</p></div><div class="option-box"><b>整體概況</b><p class="muted">有效作答總數、完成率、提交時間分布。</p></div><div class="option-box"><b>個人背景分布</b><p class="muted">家庭結構、家庭月收入、個人負債、最高學歷、正式工作經驗。</p></div><div class="option-box"><b>題目與量表分析</b><p class="muted">各選項人數與比例、1～5 分分布及平均分數。</p></div><div class="option-box"><b>交叉分析</b><p class="muted">依家庭背景、學歷或收入區間比較測驗分數。</p></div><p class="muted">完成登入驗證與 Responses 資料串接後，這裡才會呈現真實統計。</p>';
 }
 function showUpdateNotice(){
- alert("資料更新已完成！");
+ const modal=document.getElementById("updateModal");
+ if(modal){modal.classList.add("show");document.body.style.overflow="hidden";}
+}
+function closeUpdateNotice(){
+ const modal=document.getElementById("updateModal");
+ if(modal){modal.classList.remove("show");document.body.style.overflow="";}
 }
 function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常低")+'</span><span>5｜'+esc(q.maxLabel||"非常高")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else{q.options.forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
 function exportData(){if(!collectEditor())return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);saveLocal("匯出前已儲存");}
