@@ -2,76 +2,83 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101722"><title>義務役新兵問卷｜v3 題目管理</title>
+<meta name="theme-color" content="#f4f6f8"><title>義務役新兵問卷｜管理後台</title>
 <style>
-:root{color-scheme:dark;--bg:#101722;--panel:#1c2a3b;--panel2:#152131;--line:#40536b;--text:#f3f6fb;--muted:#aab8c8;--blue:#2388d1;--red:#9b4654;--green:#247b61}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;font-size:16px;line-height:1.55}
-header{padding:24px 18px 14px;max-width:980px;margin:auto}h1{font-size:25px;margin:0 0 5px}h2{font-size:20px;margin:0 0 14px}h3{font-size:17px;margin:18px 0 10px}
-.muted{color:var(--muted);font-size:13px}main{max-width:980px;margin:auto;padding:0 14px 42px}.card{background:var(--panel);border:1px solid #26384d;border-radius:16px;padding:18px;margin:14px 0}
-input,textarea{width:100%;padding:13px;margin:6px 0 12px;border-radius:10px;border:1px solid #52647a;background:#101722;color:var(--text);font:inherit;font-size:16px}textarea{min-height:100px;resize:vertical}label{display:block;font-weight:650;margin-top:8px}
-button{min-height:43px;padding:10px 14px;border:1px solid transparent;border-radius:10px;margin:3px;background:#36516e;color:white;font:inherit;font-weight:600;cursor:pointer}button:disabled{opacity:.35;cursor:not-allowed}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #66b8ff;outline-offset:2px}.primary{background:var(--blue)}.danger{background:var(--red)}.success{background:var(--green)}
-.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.question-list{display:grid;gap:9px;margin-top:14px}.question-row{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel2)}.question-row.active{border:2px solid #55a9e8;background:#20354a}
-.question-top{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}.question-top button{min-height:38px;padding:7px 11px}.question-preview{white-space:pre-wrap;overflow-wrap:anywhere}
-.option-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--panel2)}.option-grid{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px}.option-grid input{margin-bottom:5px}
-.status{font-size:13px;color:#9bd9bc;min-height:22px}.pill{display:inline-block;border-radius:999px;padding:3px 9px;background:#30465e;color:#cfe4fa;font-size:12px}.help{color:var(--muted);font-size:13px;margin-top:-6px}
-.preview{border:1px dashed #52647a;border-radius:12px;padding:12px;margin-top:12px}.preview-option{padding:9px 10px;border:1px solid var(--line);border-radius:9px;margin:7px 0}
-@media(min-width:760px){.columns{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.4fr);gap:14px;align-items:start}.sticky{position:sticky;top:12px}}
-@media(max-width:420px){header{padding-top:18px}.card{padding:14px}.option-grid{grid-template-columns:minmax(0,1fr) 88px}.question-top button{font-size:14px}}
+:root{color-scheme:light;--bg:#f4f6f8;--paper:#fff;--ink:#202a36;--muted:#718096;--line:#e1e7ee;--blue:#245f9e;--bluebg:#eaf2fb;--red:#a33d49;--green:#28765d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Noto Sans TC",sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line)}.head{max-width:1040px;margin:auto;padding:22px 20px}.brand{font-size:13px;color:var(--muted);letter-spacing:.08em}.head h1{font-size:24px;margin:3px 0}.head p{margin:0;color:var(--muted);font-size:13px}
+main{max-width:1040px;margin:26px auto;padding:0 18px 48px}.screen{display:none}.screen.active{display:block}.welcome{text-align:center;padding:36px 12px 20px}.welcome h2{font-size:26px;margin:0 0 8px}.welcome p{color:var(--muted);margin:0}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:760px;margin:28px auto}
+.home-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 22px;text-align:left;cursor:pointer;min-height:190px;transition:.15s}
+.home-card:hover{border-color:#8eafd2;transform:translateY(-2px);box-shadow:0 8px 24px #20304012}.home-card .symbol{font-size:30px}.home-card h3{font-size:20px;margin:12px 0 5px}.home-card p{font-size:14px;color:var(--muted);margin:0}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-weight:600;padding:10px 15px;min-height:42px;cursor:pointer}
+button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button.soft{background:var(--bluebg);color:var(--blue);border-color:#d4e3f3}button.danger{color:var(--red)}button:disabled{opacity:.4;cursor:not-allowed}
+input,textarea,select{width:100%;border:1px solid #cbd5df;border-radius:9px;padding:12px;background:#fff;color:var(--ink);font:inherit;margin:5px 0 13px}textarea{min-height:95px;resize:vertical}label{display:block;font-weight:650;margin-top:10px}
+.muted{color:var(--muted);font-size:13px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.count{font-size:13px;color:var(--muted);background:#f0f3f6;padding:4px 10px;border-radius:99px}
+.editor-layout{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,1.4fr);gap:16px;align-items:start}
+.question-item{padding:13px;border:1px solid var(--line);border-radius:12px;margin:9px 0;background:#fff}.question-item.selected{border:2px solid #78a5d1;background:#f4f8fc}.question-item p{margin:8px 0;overflow-wrap:anywhere}
+.option-box{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;background:#fafbfd}.option-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px}.option-row input{margin-bottom:3px}
+.type-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}.type-tabs button.active{background:var(--bluebg);border-color:#a9c6e3;color:var(--blue)}
+.scale-preview{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.scale-choice{flex:1;min-width:45px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px 4px;background:#fff}.scale-choice b{display:block;font-size:18px}
+.form-question{padding:17px 0;border-bottom:1px solid var(--line)}.form-question:last-child{border:0}.form-question h3{font-size:17px;margin:0 0 12px}.form-option{display:block;border:1px solid var(--line);border-radius:10px;padding:11px;margin:8px 0;font-weight:400}.form-option input{width:auto;margin:0 8px 0 0}
+.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;gap:10px}.back{margin-bottom:12px}.status{color:var(--green);font-size:13px}
+@media(max-width:700px){.home-grid{grid-template-columns:1fr;gap:12px}.home-card{min-height:140px;padding:20px}.editor-layout{grid-template-columns:1fr}.head{padding:18px}.welcome{padding-top:24px}.panel{padding:15px}}
 </style></head>
 <body>
-<header><h1>義務役新兵問卷｜題目管理</h1><div class="muted">v3.0 獨立測試環境｜目前儲存在此裝置，不會寫入 v2 正式資料</div></header>
+<header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
 <main>
-<section class="card"><h2>問卷基本設定</h2><label for="surveyTitle">問卷標題</label><input id="surveyTitle" maxlength="80" placeholder="輸入問卷標題">
-<div class="toolbar"><button class="success" onclick="saveAll()">儲存全部變更</button><span id="saveStatus" class="status" aria-live="polite">載入完成</span></div></section>
-<div class="columns">
-<section class="card sticky"><h2>題目清單 <span id="questionCount" class="pill">0 題</span></h2><button class="primary" onclick="addQuestion()">＋ 新增題目</button><div id="questions" class="question-list"></div><p class="help">使用 ↑ ↓ 調整題目順序；點選「編輯」修改內容。</p></section>
-<section class="card"><h2>題目編輯</h2><div id="editor">請先選擇題目</div></section>
-</div>
-<section class="card"><h2>問卷預覽與匯出</h2><div class="toolbar"><button onclick="preview()">更新預覽</button><button class="primary" onclick="exportData()">下載設定 JSON</button></div><div id="previewArea" class="preview muted">按「更新預覽」檢查題目呈現。</div></section>
+<section id="home" class="screen active">
+ <div class="welcome"><h2>今天要處理什麼？</h2><p>選擇要編輯題目，或先用填答者角度檢查整份表單。</p></div>
+ <div class="home-grid">
+  <button class="home-card" onclick="showScreen('edit')"><div class="symbol">✎</div><h3>1. 修改題目</h3><p>新增、刪除、排序題目，編輯選項與分數，也能設定 1～5 意願量表。</p></button>
+  <button class="home-card" onclick="showScreen('form');renderForm()"><div class="symbol">▤</div><h3>2. 查看表單</h3><p>以填答者看到的方式，預覽整份問卷與不同題型。</p></button>
+ </div>
+ <div class="panel"><label for="surveyTitleHome">問卷名稱</label><input id="surveyTitleHome" maxlength="80"><div class="toolbar"><button class="primary" onclick="saveTitle()">儲存問卷名稱</button><span id="homeStatus" class="status"></span></div></div>
+</section>
+
+<section id="edit" class="screen">
+ <button class="back soft" onclick="showScreen('home')">← 回首頁</button>
+ <div class="panel"><div class="section-title"><h2>題目管理</h2><span id="questionCount" class="count">0 題</span></div><p class="muted">可混合使用一般選項題與 1～5 意願量表。</p><button class="primary" onclick="addQuestion()">＋ 新增題目</button></div>
+ <div class="editor-layout">
+  <section class="panel"><h3>題目列表</h3><div id="questionList"></div></section>
+  <section class="panel"><h3>編輯題目</h3><div id="editor">請從左側選擇題目，或新增題目。</div></section>
+ </div>
+ <div class="panel"><div class="toolbar"><button class="primary" onclick="saveAll()">儲存全部變更</button><button onclick="exportData()">匯出題目 JSON</button><span id="editStatus" class="status"></span></div><p class="muted">目前資料儲存在這個瀏覽器的本機草稿，不會自動同步到其他裝置。</p></div>
+</section>
+
+<section id="form" class="screen">
+ <button class="back soft" onclick="showScreen('home')">← 回首頁</button>
+ <div class="panel"><div class="muted">問卷預覽｜填答者視角</div><h2 id="formTitle"></h2><p class="muted">以下僅供版面預覽，尚不會送出或儲存作答資料。</p><div id="formBody"></div></div>
+</section>
 </main>
 <script>
 "use strict";
 const KEY="recruit_v3_draft";
-const DEFAULT_DATA={title:"義務役新兵生存適應力測驗",questions:[{id:"q1",text:"如果遇到不熟悉的營區規定，你會怎麼做？",options:[{id:"a",text:"先觀察別人",score:15},{id:"b",text:"詢問同梯",score:45},{id:"c",text:"詢問幹部",score:75},{id:"d",text:"先確認規定",score:90}]}]};
-function loadData(){try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&Array.isArray(saved.questions))return saved;}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA));}
+const DEFAULT_DATA={title:"義務役新兵生存適應力測驗",questions:[{id:"q1",type:"choice",text:"如果遇到不熟悉的營區規定，你會怎麼做？",options:[{id:"a",text:"先觀察別人",score:15},{id:"b",text:"詢問同梯",score:45},{id:"c",text:"詢問幹部",score:75},{id:"d",text:"先確認規定",score:90}]},{id:"q2",type:"scale",text:"你對自己適應軍中生活的意願有多高？",minLabel:"完全沒有意願",maxLabel:"非常有意願"}]};
+function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&Array.isArray(d.questions)){d.questions.forEach(q=>{if(!q.type)q.type="choice";});return d;}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA));}
 let data=loadData(),selected=0;
 const $=id=>document.getElementById(id);
-function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function status(message){$("saveStatus").textContent=message;}
-function persist(message="已儲存至此裝置"){try{localStorage.setItem(KEY,JSON.stringify(data));status(message);return true;}catch(e){status("儲存失敗：請檢查裝置儲存空間");return false;}}
-function collectEditor(){
- const q=data.questions[selected];if(!q||!$("qtext"))return true;
- const text=$("qtext").value.trim();if(!text){alert("請先輸入題目內容。");$("qtext").focus();return false;}
- const options=[];
- for(let i=0;i<q.options.length;i++){
-  const optionText=$("ot"+i).value.trim(),scoreText=$("os"+i).value;
-  if(!optionText){alert("第 "+(i+1)+" 個選項尚未填寫。");$("ot"+i).focus();return false;}
-  if(scoreText===""||!Number.isFinite(Number(scoreText))){alert("第 "+(i+1)+" 個選項的分數請填寫有效數字。");$("os"+i).focus();return false;}
-  options.push({...q.options[i],text:optionText,score:Number(scoreText)});
- }
- q.text=text;q.options=options;return true;
-}
-function saveAll(){if(!collectEditor())return;data.title=$("surveyTitle").value.trim()||"義務役新兵生存適應力測驗";persist("全部變更已儲存");render();}
-function render(){
- $("surveyTitle").value=data.title||"";$("questionCount").textContent=data.questions.length+" 題";
- $("questions").innerHTML=data.questions.map((q,i)=>'<article class="question-row '+(i===selected?"active":"")+'"><div class="question-top"><span class="pill">第 '+(i+1)+' 題</span><button onclick="selectQuestion('+i+')">編輯</button><button aria-label="第 '+(i+1)+' 題上移" onclick="moveQuestion('+i+',-1)" '+(i===0?"disabled":"")+' >↑</button><button aria-label="第 '+(i+1)+' 題下移" onclick="moveQuestion('+i+',1)" '+(i===data.questions.length-1?"disabled":"")+' >↓</button><button class="danger" onclick="deleteQuestion('+i+')">刪除</button></div><div class="question-preview">'+escapeHTML(q.text||"（尚未填寫題目）")+'</div><div class="muted">'+q.options.length+' 個選項</div></article>').join("");
- renderEditor();
-}
-function renderEditor(){
- const q=data.questions[selected];if(!q){$("editor").innerHTML='<p class="muted">目前沒有題目，請新增題目。</p>';return;}
- let html='<div class="muted">題目 ID：'+escapeHTML(q.id)+'</div><label for="qtext">問題內容</label><textarea id="qtext" maxlength="300" placeholder="請輸入完整題目">'+escapeHTML(q.text)+'</textarea><h3>答案選項 <span class="pill">'+q.options.length+'/10</span></h3><p class="help">每題至少 2 個、最多 10 個選項。分數可依測驗規則設定。</p>';
- q.options.forEach((o,i)=>{html+='<div class="option-card"><div class="toolbar"><strong>選項 '+(i+1)+'</strong><span class="pill">ID：'+escapeHTML(o.id)+'</span></div><label for="ot'+i+'">選項文字</label><input id="ot'+i+'" maxlength="200" value="'+escapeHTML(o.text)+'" placeholder="輸入選項內容"><div class="option-grid"><div><label for="os'+i+'">分數</label><input id="os'+i+'" type="number" step="any" value="'+escapeHTML(o.score)+'"></div><div><label>調整順序</label><div class="toolbar"><button onclick="moveOption('+i+',-1)" '+(i===0?"disabled":"")+'>↑</button><button onclick="moveOption('+i+',1)" '+(i===q.options.length-1?"disabled":"")+'>↓</button></div></div></div><button class="danger" onclick="deleteOption('+i+')" '+(q.options.length<=2?"disabled":"")+'>刪除此選項</button></div>';});
- html+='<div class="toolbar"><button class="primary" onclick="addOption()" '+(q.options.length>=10?"disabled":"")+'>＋ 增加選項</button><button class="success" onclick="saveAll()">儲存本題</button></div>';$("editor").innerHTML=html;
-}
-function selectQuestion(i){if(!collectEditor())return;selected=i;persist();render();}
-function addQuestion(){if(!collectEditor())return;const id="q"+Date.now();data.questions.push({id,text:"",options:[{id:id+"_a",text:"選項 1",score:0},{id:id+"_b",text:"選項 2",score:0}]});selected=data.questions.length-1;persist("已新增題目草稿");render();$("qtext").focus();}
-function deleteQuestion(i){if(!confirm("確定刪除第 "+(i+1)+" 題？此操作會儲存到本機草稿。"))return;if(i!==selected&&!collectEditor())return;data.questions.splice(i,1);selected=Math.max(0,Math.min(selected,data.questions.length-1));persist("題目已刪除");render();}
-function moveQuestion(i,delta){if(!collectEditor())return;const target=i+delta;if(target<0||target>=data.questions.length)return;[data.questions[i],data.questions[target]]=[data.questions[target],data.questions[i]];selected=target;persist("題目順序已更新");render();}
-function addOption(){if(!collectEditor())return;const q=data.questions[selected];if(!q||q.options.length>=10)return;q.options.push({id:q.id+"_o"+Date.now(),text:"新選項",score:0});persist("已新增選項");renderEditor();}
-function deleteOption(i){const q=data.questions[selected];if(!q||q.options.length<=2)return;if(!collectEditor())return;q.options.splice(i,1);persist("選項已刪除");renderEditor();}
-function moveOption(i,delta){if(!collectEditor())return;const q=data.questions[selected],target=i+delta;if(!q||target<0||target>=q.options.length)return;[q.options[i],q.options[target]]=[q.options[target],q.options[i]];persist("選項順序已更新");renderEditor();}
-function preview(){if(!collectEditor())return;data.title=$("surveyTitle").value.trim()||"義務役新兵生存適應力測驗";persist("預覽內容已更新");let html="<h3>"+escapeHTML(data.title)+"</h3>";data.questions.forEach((q,i)=>{html+='<div class="option-card"><strong>'+(i+1)+". "+escapeHTML(q.text)+'</strong>';q.options.forEach(o=>{html+='<div class="preview-option">'+escapeHTML(o.text)+' <span class="muted">('+escapeHTML(o.score)+' 分)</span></div>';});html+="</div>";});$("previewArea").classList.remove("muted");$("previewArea").innerHTML=html||"目前沒有題目。";}
-function exportData(){if(!collectEditor())return;data.title=$("surveyTitle").value.trim()||"義務役新兵生存適應力測驗";persist("匯出前已儲存");const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-render();
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");if(id==="edit")renderEditorScreen();if(id==="home")$("surveyTitleHome").value=data.title||"";}
+function saveLocal(msg){try{localStorage.setItem(KEY,JSON.stringify(data));$("editStatus").textContent=msg||"已儲存到本機";return true;}catch(e){$("editStatus").textContent="儲存失敗";return false;}}
+function saveTitle(){data.title=$("surveyTitleHome").value.trim()||"義務役新兵生存適應力測驗";localStorage.setItem(KEY,JSON.stringify(data));$("homeStatus").textContent="問卷名稱已儲存";}
+function collectEditor(){const q=data.questions[selected];if(!q||!$("qtext"))return true;const t=$("qtext").value.trim();if(!t){alert("請輸入題目內容");$("qtext").focus();return false;}q.text=t;if(q.type==="choice"){const opts=[];for(let i=0;i<q.options.length;i++){const txt=$("opt"+i).value.trim(),sc=$("score"+i).value;if(!txt){alert("請填寫第 "+(i+1)+" 個選項");return false;}if(sc===""||!Number.isFinite(Number(sc))){alert("請輸入有效分數");return false;}opts.push({...q.options[i],text:txt,score:Number(sc)});}q.options=opts;}else{q.minLabel=$("minLabel").value.trim()||"非常低";q.maxLabel=$("maxLabel").value.trim()||"非常高";}return true;}
+function renderEditorScreen(){ $("questionCount").textContent=data.questions.length+" 題";$("questionList").innerHTML=data.questions.map((q,i)=>'<div class="question-item '+(i===selected?"selected":"")+'"><div class="toolbar"><b>第 '+(i+1)+' 題</b><button class="soft" onclick="selectQ('+i+')">編輯</button><button onclick="moveQ('+i+',-1)" '+(i===0?"disabled":"")+' aria-label="上移">↑</button><button onclick="moveQ('+i+',1)" '+(i===data.questions.length-1?"disabled":"")+' aria-label="下移">↓</button><button class="danger" onclick="deleteQ('+i+')">刪除</button></div><p>'+esc(q.text||"（尚未填寫）")+'</p><span class="count">'+(q.type==="scale"?"1～5 意願量表":"一般選項題")+'</span></div>').join("");renderEditor();}
+function renderEditor(){const q=data.questions[selected];if(!q){$("editor").innerHTML="目前沒有題目，請新增。";return;}let h='<label>題目內容</label><textarea id="qtext" maxlength="300" placeholder="請輸入問題">'+esc(q.text)+'</textarea><label>題目類型</label><div class="type-tabs"><button class="'+(q.type==="choice"?"active":"")+'" onclick="changeType(\\'choice\\')">一般選項題</button><button class="'+(q.type==="scale"?"active":"")+'" onclick="changeType(\\'scale\\')">1～5 意願量表</button></div>';
+if(q.type==="choice"){h+='<p class="muted">受測者從選項中選擇一個答案，每個選項可設定分數。</p>';q.options.forEach((o,i)=>{h+='<div class="option-box"><b>選項 '+(i+1)+'</b><label>選項文字</label><input id="opt'+i+'" value="'+esc(o.text)+'" placeholder="輸入選項"><div class="option-row"><div><label>計分</label><input id="score'+i+'" type="number" value="'+esc(o.score)+'"></div><div><label>順序</label><div class="toolbar"><button onclick="moveOpt('+i+',-1)" '+(i===0?"disabled":"")+'>↑</button><button onclick="moveOpt('+i+',1)" '+(i===q.options.length-1?"disabled":"")+'>↓</button></div></div></div><button class="danger" onclick="deleteOpt('+i+')" '+(q.options.length<=2?"disabled":"")+'>刪除此選項</button></div>';});h+='<button class="soft" onclick="addOpt()" '+(q.options.length>=10?"disabled":"")+'>＋ 增加選項</button>';}
+else{h+='<p class="muted">受測者以 1 到 5 分表達意願程度。</p><label>1 分代表</label><input id="minLabel" maxlength="40" value="'+esc(q.minLabel||"完全沒有意願")+'"><label>5 分代表</label><input id="maxLabel" maxlength="40" value="'+esc(q.maxLabel||"非常有意願")+'"><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<div class="scale-choice"><b>'+n+'</b><span class="muted">分</span></div>').join("")+'</div>';}
+h+='<div class="toolbar"><button class="primary" onclick="saveAll()">儲存本題</button></div>';$("editor").innerHTML=h;}
+function selectQ(i){if(!collectEditor())return;selected=i;saveLocal("已儲存");renderEditorScreen();}
+function addQuestion(){if(!collectEditor())return;const id="q"+Date.now();data.questions.push({id,type:"choice",text:"",options:[{id:id+"_1",text:"選項 1",score:0},{id:id+"_2",text:"選項 2",score:0}]});selected=data.questions.length-1;saveLocal("已新增題目");renderEditorScreen();}
+function deleteQ(i){if(!confirm("確定刪除第 "+(i+1)+" 題？"))return;if(i!==selected&&!collectEditor())return;data.questions.splice(i,1);selected=Math.max(0,Math.min(selected,data.questions.length-1));saveLocal("題目已刪除");renderEditorScreen();}
+function moveQ(i,d){if(!collectEditor())return;let n=i+d;if(n<0||n>=data.questions.length)return;[data.questions[i],data.questions[n]]=[data.questions[n],data.questions[i]];selected=n;saveLocal("順序已更新");renderEditorScreen();}
+function changeType(type){if(!collectEditor())return;const q=data.questions[selected];if(q.type===type)return;if(type==="scale"){q.type="scale";q.minLabel="完全沒有意願";q.maxLabel="非常有意願";}else{q.type="choice";q.options=[{id:q.id+"_1",text:"選項 1",score:1},{id:q.id+"_2",text:"選項 2",score:2}];}saveLocal("題型已變更");renderEditor();}
+function addOpt(){if(!collectEditor())return;const q=data.questions[selected];if(q.options.length>=10)return;q.options.push({id:q.id+"_o"+Date.now(),text:"新選項",score:0});saveLocal("已新增選項");renderEditor();}
+function deleteOpt(i){const q=data.questions[selected];if(q.options.length<=2||!collectEditor())return;q.options.splice(i,1);saveLocal("選項已刪除");renderEditor();}
+function moveOpt(i,d){if(!collectEditor())return;const q=data.questions[selected],n=i+d;if(n<0||n>=q.options.length)return;[q.options[i],q.options[n]]=[q.options[n],q.options[i]];saveLocal("選項順序已更新");renderEditor();}
+function saveAll(){if(!collectEditor())return;saveLocal("所有變更已儲存");renderEditorScreen();}
+function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常低")+'</span><span>5｜'+esc(q.maxLabel||"非常高")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else{q.options.forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
+function exportData(){if(!collectEditor())return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);saveLocal("匯出前已儲存");}
+$("surveyTitleHome").value=data.title||"";renderEditorScreen();
 </script></body></html>
