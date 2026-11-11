@@ -55,7 +55,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 .password-tools{margin-top:16px;padding-top:14px;border-top:1px solid #292929}
 .password-tools button{width:auto}
 
-.password-inline{display:none;margin:18px auto 0;max-width:420px;text-align:left;background:#101010;border:1px solid #444;border-radius:16px;padding:18px}.password-inline.open{display:block}.password-inline h3{margin:0 0 10px}.password-inline button{margin-top:8px}
+.password-inline{margin:18px auto 0;max-width:420px;text-align:left;background:#101010;border:1px solid #444;border-radius:16px;padding:12px}.password-inline[open]{display:block}.password-inline h3{margin:0 0 10px}.password-inline button{margin-top:8px}
 </style></head>
 <body>
 <header><div class="head"><div class="brand">V3 QUESTIONNAIRE BUILDER</div><h1>義務役新兵問卷管理後台</h1><p>獨立測試環境｜尚未連接正式問卷與雲端資料庫</p></div></header>
@@ -87,15 +87,19 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
   <button class="home-card" onclick="showScreen('stats');renderStats()"><span class="symbol" style="color:#a47ac8">▥</span><span class="number">03</span><h3>統計</h3><p>分析作答結果與分數分布</p></button>
   <a class="home-card respondent-entry" href="../" target="_blank" rel="noopener"><span class="symbol" style="color:#c28b43">↗</span><span class="number">04</span><h3>填寫</h3><p>進入實際問卷並填寫作答</p><span class="update-action">開始填寫</span></a>
  </div>
- <div class="home-footer">系統管理介面・V3<br><div class="password-tools"><button type="button" onclick="openPasswordChange()">更改管理員密碼</button></div></div>
- <section id="passwordInline" class="password-inline" aria-label="更改管理員密碼">
+ <div class="home-footer">系統管理介面・V3</div>
+ <details id="passwordDetails" class="password-inline" style="display:block">
+  <summary style="cursor:pointer;list-style:none;text-align:center;border:1px solid #444;background:#171717;border-radius:12px;padding:12px;color:#eee;font-weight:600">更改管理員密碼</summary>
+  <div style="padding-top:16px">
+
   <h3>更改管理員密碼</h3>
   <label for="inlineOldPassword">目前密碼</label><input id="inlineOldPassword" type="password" autocomplete="current-password">
   <label for="inlineNewPassword">新密碼（至少 4 個字元）</label><input id="inlineNewPassword" type="password" minlength="4" autocomplete="new-password">
   <label for="inlineConfirmPassword">再次輸入新密碼</label><input id="inlineConfirmPassword" type="password" minlength="4" autocomplete="new-password">
   <div id="inlinePasswordError" class="login-error" role="alert"></div>
   <div class="toolbar"><button class="primary" type="button" onclick="saveInlinePassword()">確認更改</button><button type="button" onclick="closeInlinePassword()">取消</button></div>
- </section>
+  </div>
+ </details>
  <input id="surveyTitleHome" type="hidden" value="">
 </section>
 
@@ -160,8 +164,8 @@ function adminLogin(event){
  return false;
 }
 function openPasswordChange(){
- const panel=document.getElementById("passwordInline");
- panel.classList.add("open");
+ const panel=document.getElementById("passwordDetails");
+ panel.open=true;
  document.getElementById("inlinePasswordError").textContent="";
  document.getElementById("inlineOldPassword").value="";
  document.getElementById("inlineNewPassword").value="";
@@ -169,7 +173,7 @@ function openPasswordChange(){
  panel.scrollIntoView({behavior:"smooth",block:"center"});
  document.getElementById("inlineOldPassword").focus();
 }
-function closeInlinePassword(){document.getElementById("passwordInline").classList.remove("open");}
+function closeInlinePassword(){document.getElementById("passwordDetails").open=false;}
 function saveInlinePassword(){
  const oldValue=document.getElementById("inlineOldPassword").value;
  const newValue=document.getElementById("inlineNewPassword").value;
