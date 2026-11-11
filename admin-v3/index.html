@@ -140,19 +140,27 @@ const ADMIN_PASSWORD_KEY="recruit_v3_admin_password";
 function getAdminPassword(){return localStorage.getItem(ADMIN_PASSWORD_KEY)||"0000";}
 function adminLogin(event){
  event.preventDefault();
- const input=$("adminLoginPassword").value;
- if(input===getAdminPassword()){
-  sessionStorage.setItem("recruit_v3_admin_logged_in","1");
-  $("loginGate").style.display="none";
-  document.body.style.overflow="";
-  document.querySelectorAll("[inert]").forEach(el=>el.removeAttribute("inert"));
-  $("loginError").textContent="";
-  $("adminLoginPassword").value="";
- }else{
-  $("loginError").textContent="密碼錯誤，請再試一次。";
-  $("adminLoginPassword").value="";
-  $("adminLoginPassword").focus();
+ const input=document.getElementById("adminLoginPassword").value;
+ if(input!==getAdminPassword()){
+  document.getElementById("loginError").textContent="密碼錯誤，請再試一次。";
+  document.getElementById("adminLoginPassword").value="";
+  document.getElementById("adminLoginPassword").focus();
+  return false;
  }
+ sessionStorage.setItem("recruit_v3_admin_logged_in","1");
+ // 完整解除頁面鎖定：清除所有 inert/aria-hidden 與可能殘留的互動限制
+ document.querySelectorAll("[inert]").forEach(el=>el.removeAttribute("inert"));
+ document.documentElement.inert=false;
+ document.body.inert=false;
+ document.querySelectorAll("main, main *").forEach(el=>{
+  el.removeAttribute("inert");
+  el.removeAttribute("aria-hidden");
+  el.style.removeProperty("pointer-events");
+ });
+ document.body.style.overflow="auto";
+ const gate=document.getElementById("loginGate");
+ if(gate) gate.remove();
+ document.getElementById("adminLoginPassword").value="";
  return false;
 }
 function changePasswordWithPrompts(){
