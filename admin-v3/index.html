@@ -33,6 +33,8 @@ input,textarea,select{width:100%;border:1px solid #cbd5df;border-radius:9px;padd
  <div class="home-grid">
   <button class="home-card" onclick="showScreen('edit')"><div class="symbol">✎</div><h3>1. 修改題目</h3><p>新增、刪除、排序題目，編輯選項與分數，也能設定 1～5 意願量表。</p></button>
   <button class="home-card" onclick="showScreen('form');renderForm()"><div class="symbol">▤</div><h3>2. 查看表單</h3><p>以填答者看到的方式，預覽整份問卷與不同題型。</p></button>
+  <button class="home-card" onclick="showScreen('stats');renderStats()"><div class="symbol">▥</div><h3>3. 查看統計</h3><p>作答分析、分數分布與交叉統計。</p></button>
+  <button class="home-card" onclick="showScreen('control');renderControl()"><div class="symbol">⚙</div><h3>4. 管理中心</h3><p>管理員、系統狀態、操作紀錄與資料同步。</p></button>
  </div>
  <div class="panel"><label for="surveyTitleHome">問卷名稱</label><input id="surveyTitleHome" maxlength="80"><div class="toolbar"><button class="primary" onclick="saveTitle()">儲存問卷名稱</button><span id="homeStatus" class="status"></span></div></div>
 </section>
@@ -45,6 +47,15 @@ input,textarea,select{width:100%;border:1px solid #cbd5df;border-radius:9px;padd
   <section class="panel"><h3>編輯題目</h3><div id="editor">請從左側選擇題目，或新增題目。</div></section>
  </div>
  <div class="panel"><div class="toolbar"><button class="primary" onclick="saveAll()">儲存全部變更</button><button onclick="exportData()">匯出題目 JSON</button><span id="editStatus" class="status"></span></div><p class="muted">目前資料儲存在這個瀏覽器的本機草稿，不會自動同步到其他裝置。</p></div>
+</section>
+
+<section id="stats" class="screen">
+ <button class="back soft" onclick="showScreen('home')">← 回首頁</button>
+ <div class="panel"><div class="muted">統計分析</div><h2>問卷作答統計</h2><div id="statsBody"></div></div>
+</section>
+<section id="control" class="screen">
+ <button class="back soft" onclick="showScreen('home')">← 回首頁</button>
+ <div class="panel"><div class="muted">系統管理</div><h2>管理中心</h2><div id="controlBody"></div></div>
 </section>
 
 <section id="form" class="screen">
@@ -78,6 +89,12 @@ function addOpt(){if(!collectEditor())return;const q=data.questions[selected];if
 function deleteOpt(i){const q=data.questions[selected];if(q.options.length<=2||!collectEditor())return;q.options.splice(i,1);saveLocal("選項已刪除");renderEditor();}
 function moveOpt(i,d){if(!collectEditor())return;const q=data.questions[selected],n=i+d;if(n<0||n>=q.options.length)return;[q.options[i],q.options[n]]=[q.options[n],q.options[i]];saveLocal("選項順序已更新");renderEditor();}
 function saveAll(){if(!collectEditor())return;saveLocal("所有變更已儲存");renderEditorScreen();}
+function renderStats(){
+ $("statsBody").innerHTML='<div class="option-box"><h3>尚未連接作答資料庫</h3><p class="muted">目前尚未串接 Google Sheets 的 Responses 工作表，因此不會顯示虛構的作答數字。</p></div><div class="option-box"><b>整體概況</b><p class="muted">有效作答總數、完成率、提交時間分布。</p></div><div class="option-box"><b>個人背景分布</b><p class="muted">家庭結構、家庭月收入、個人負債、最高學歷、正式工作經驗。</p></div><div class="option-box"><b>題目與量表分析</b><p class="muted">各選項人數與比例、1～5 分分布及平均分數。</p></div><div class="option-box"><b>交叉分析</b><p class="muted">依家庭背景、學歷或收入區間比較測驗分數。</p></div><p class="muted">完成登入驗證與 Responses 資料串接後，這裡才會呈現真實統計。</p>';
+}
+function renderControl(){
+ $("controlBody").innerHTML='<div class="option-box"><b>管理員與權限</b><p class="muted">預計由主要管理員管理成員名單及編輯權限。</p></div><div class="option-box"><b>系統與資料同步</b><p class="muted">顯示後端連線、資料庫與最近同步狀態。</p></div><div class="option-box"><b>操作紀錄</b><p class="muted">查看管理員的編輯、儲存及管理操作紀錄。</p></div><div class="option-box"><b>版本管理</b><p class="muted">預計提供正式發布與版本還原功能（僅主要管理員）。</p></div><p class="muted">目前這些管理功能尚未接上登入驗證與雲端後端。</p>';
+}
 function renderForm(){$("formTitle").textContent=data.title||"義務役新兵生存適應力測驗";$("formBody").innerHTML=data.questions.map((q,i)=>{let h='<div class="form-question"><h3>'+(i+1)+'. '+esc(q.text)+'</h3>';if(q.type==="scale"){h+='<div class="scale-labels"><span>1｜'+esc(q.minLabel||"非常低")+'</span><span>5｜'+esc(q.maxLabel||"非常高")+'</span></div><div class="scale-preview">'+[1,2,3,4,5].map(n=>'<label class="scale-choice"><b>'+n+'</b><br><input type="radio" name="preview_'+i+'" value="'+n+'"></label>').join("")+'</div>';}else{q.options.forEach((o,j)=>{h+='<label class="form-option"><input type="radio" name="preview_'+i+'" value="'+esc(o.id)+'">'+esc(o.text)+'</label>';});}return h+'</div>';}).join("")||'<p class="muted">目前還沒有題目。</p>';}
 function exportData(){if(!collectEditor())return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="v3-questions.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);saveLocal("匯出前已儲存");}
 $("surveyTitleHome").value=data.title||"";renderEditorScreen();
