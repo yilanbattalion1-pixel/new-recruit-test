@@ -86,7 +86,7 @@ input,textarea,select{width:100%;border:1px solid #444;border-radius:9px;padding
 "use strict";
 const KEY="recruit_v3_draft";
 const DEFAULT_DATA={title:"義務役新兵生存適應力測驗",questions:[{id:"q1",type:"choice",text:"如果遇到不熟悉的營區規定，你會怎麼做？",options:[{id:"a",text:"先觀察別人",score:15},{id:"b",text:"詢問同梯",score:45},{id:"c",text:"詢問幹部",score:75},{id:"d",text:"先確認規定",score:90}]},{id:"q2",type:"scale",text:"你對自己適應軍中生活的意願有多高？",minLabel:"完全沒有意願",maxLabel:"非常有意願"}]};
-function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&Array.isArray(d.questions)){d.questions.forEach(q=>{if(!q.type)q.type="choice";});return d;}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA));}
+function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&Array.isArray(d.questions)){d.questions.forEach(q=>{if(!q.type)q.type="choice";if(q.type==="choice"){q.options=Array.isArray(q.options)?q.options.slice(0,4):[];while(q.options.length<4){const n=q.options.length;q.options.push({id:q.id+"_o"+n,text:"",score:0});}}});return d;}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA));}
 let data=loadData(),selected=-1,draftQuestion=null;
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -126,12 +126,12 @@ function renderEditor(){
  h+='<div class="toolbar"><button class="primary" onclick="saveAll()">'+(draftQuestion?"新增此題":"儲存本題")+'</button>'+(draftQuestion?'<button onclick="cancelDraft()">取消</button>':'')+'</div>';
  $("editor").innerHTML=h;
 }
-function selectQ(i){if(!collectEditor())return;if(draftQuestion){if(draftQuestion.text.trim()||draftQuestion.type!=="choice"){if(!confirm("目前新增題目尚未儲存，確定放棄並切換嗎？"))return;}}draftQuestion=null;selected=i;saveLocal("已切換題目");renderEditorScreen();}
+function selectQ(i){if(draftQuestion){const typed=$("qtext")&&$("qtext").value.trim();if(typed&&!confirm("目前新增題目尚未儲存，確定放棄並切換嗎？"))return;draftQuestion=null;}else if(!collectEditor())return;selected=i;saveLocal("已切換題目");renderEditorScreen();}
 function addQuestion(){const id="q"+Date.now();selected=-1;draftQuestion={id,type:"choice",text:"",options:[0,1,2,3].map(i=>({id:id+"_o"+i,text:"",score:0}))};renderEditorScreen();}
 function cancelDraft(){draftQuestion=null;selected=data.questions.length?0:-1;renderEditorScreen();}
 function deleteQ(i){if(!confirm("確定刪除第 "+(i+1)+" 題？"))return;data.questions.splice(i,1);selected=data.questions.length?Math.min(i,data.questions.length-1):-1;saveLocal("題目已刪除");renderEditorScreen();}
 function moveQ(i,d){if(!collectEditor())return;let n=i+d;if(n<0||n>=data.questions.length)return;[data.questions[i],data.questions[n]]=[data.questions[n],data.questions[i]];selected=n;saveLocal("順序已更新");renderEditorScreen();}
-function changeType(type){const q=draftQuestion||(selected>=0?data.questions[selected]:null);if(!q||q.type===type)return;if(!collectEditor())return;q.type=type;if(type==="choice"){q.options=[0,1,2,3].map(i=>({id:q.id+"_o"+i,text:"",score:0}));}else if(type==="scale"){q.minLabel="非常不同意";q.maxLabel="非常同意";delete q.options;}else{q.placeholder="請輸入您的答案";delete q.options;}renderEditor();}
+function changeType(type){const q=draftQuestion||(selected>=0?data.questions[selected]:null);if(!q||q.type===type)return;if($("qtext"))q.text=$("qtext").value;q.type=type;if(type==="choice"){q.options=[0,1,2,3].map(i=>({id:q.id+"_o"+i,text:"",score:0}));}else if(type==="scale"){q.minLabel="非常不同意";q.maxLabel="非常同意";delete q.options;}else{q.placeholder="請輸入您的答案";delete q.options;}renderEditor();}
 function saveAll(){if(!collectEditor())return;if(draftQuestion){data.questions.push(draftQuestion);selected=data.questions.length-1;draftQuestion=null;saveLocal("新題目已新增並儲存");renderEditorScreen();addQuestion();}else{saveLocal("本題及全部變更已儲存");renderEditorScreen();}}
 function addOpt(){return;}function deleteOpt(){return;}function moveOpt(){return;}
 function renderStats(){
