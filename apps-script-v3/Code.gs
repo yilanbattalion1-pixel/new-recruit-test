@@ -185,7 +185,20 @@ function getStats_() {
     const s = qStats[id];
     if (s.type === 'scale' && s.total) s.average = Math.round(s.sum / s.total * 100) / 100;
   });
-  return { ok: true, total: count, question_stats: qStats, updated_at: new Date().toISOString() };
+  const fields = [
+    ['家庭結構', 3], ['家庭月收入', 4], ['個人負債', 5],
+    ['最高學歷', 6], ['正式工作經驗', 7]
+  ];
+  const demographics = {};
+  fields.forEach(([label, col]) => {
+    const counts = {};
+    rows.forEach(row => {
+      const value = String(row[col] || '未填');
+      counts[value] = (counts[value] || 0) + 1;
+    });
+    demographics[label] = counts;
+  });
+  return { ok: true, total: count, question_stats: qStats, demographics: demographics, updated_at: new Date().toISOString() };
 }
 
 function getResponses_() {
